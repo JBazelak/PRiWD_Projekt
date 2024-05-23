@@ -11,7 +11,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.polinav3.gamepad.ButtonInput;
+import com.example.polinav3.gamepad.ButtonType;
 import com.example.polinav3.gamepad.GameControllerService;
+import com.example.polinav3.gamepad.LocalGamepadConnector;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.unit.SpeechManager;
@@ -19,6 +22,8 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 import java.util.ArrayList;
 
 public class MainActivity extends TopBaseActivity {
+
+    private LocalGamepadConnector localGamepadConnector = new LocalGamepadConnector();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +54,22 @@ public class MainActivity extends TopBaseActivity {
         Log.d("controllers_amount", String.valueOf(list.size()));
     }
 
-    private void JoystickAction(float x, float y) {
+    private void JoystickAction(float x1, float y1, float x2, float y2) {
 //        TextView v = findViewById(R.id.textStart);
 //        v.setText("X:"+String.valueOf(x)+"|Y:"+String.valueOf(y));
+        Log.d("joystick1", "X:"+String.valueOf(x1)+"|Y:"+String.valueOf(y1));
+        Log.d("joystick2", "X:"+String.valueOf(x2)+"|Y:"+String.valueOf(y2));
     }
     @Override
     public  boolean dispatchKeyEvent(KeyEvent event) {
         Log.d("test", "button");
 //        TextView v = findViewById(R.id.textStart);
-//        v.setText("buutton:"+String.valueOf(event.getKeyCode()));
+//        v.setText("button:"+String.valueOf(event.getKeyCode()));
         switch(event.getKeyCode()) {
             case KeyEvent.KEYCODE_BUTTON_L1:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.LB,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_R1:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.RB,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_THUMBR:
             case KeyEvent.KEYCODE_BUTTON_THUMBL:
             case KeyEvent.KEYCODE_DPAD_LEFT:
@@ -70,13 +79,19 @@ public class MainActivity extends TopBaseActivity {
             case KeyEvent.KEYCODE_BUTTON_START:
             case KeyEvent.KEYCODE_BUTTON_MODE://Big button in the middle
             case KeyEvent.KEYCODE_BUTTON_B:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.B,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_A:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.A,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_X:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.X,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_Y:
-                Log.d("przycisk", String.valueOf(event.getKeyCode()));
-            default:
-                return super.onKeyDown(event.getKeyCode(), event);
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.Y,0,0));break;
+//                Log.d("przycisk", String.valueOf(event.getKeyCode()));
+
+//            default:
+//                return super.onKeyDown(event.getKeyCode(), event);
         }
+        return super.onKeyDown(event.getKeyCode(), event);
     }
 
     @Override
@@ -111,31 +126,33 @@ public class MainActivity extends TopBaseActivity {
         // Calculate the horizontal distance to move by
         // using the input value from one of these physical controls:
         // the left control stick, hat axis, or the right control stick.
-        float x = getCenteredAxis(event, inputDevice,
+        float x1 = getCenteredAxis(event, inputDevice,
                 MotionEvent.AXIS_X, historyPos);
-        if (x == 0) {
-            x = getCenteredAxis(event, inputDevice,
+        float x2=x1;
+        if (x1 == 0) {
+            x1 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_HAT_X, historyPos);
         }
-        if (x == 0) {
-            x = getCenteredAxis(event, inputDevice,
+        if (x2 == 0) {
+            x2 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_Z, historyPos);
         }
 
         // Calculate the vertical distance to move by
         // using the input value from one of these physical controls:
         // the left control stick, hat switch, or the right control stick.
-        float y = getCenteredAxis(event, inputDevice,
+        float y1 = getCenteredAxis(event, inputDevice,
                 MotionEvent.AXIS_Y, historyPos);
-        if (y == 0) {
-            y = getCenteredAxis(event, inputDevice,
+        float y2=y1;
+        if (y1 == 0) {
+            y1 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_HAT_Y, historyPos);
         }
-        if (y == 0) {
-            y = getCenteredAxis(event, inputDevice,
+        if (y2 == 0) {
+            y2 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_RZ, historyPos);
         }
-        JoystickAction(x,y);
+        JoystickAction(x1,y1,x2,y2);
         // Update the ship object based on the new x and y values
     }
 
