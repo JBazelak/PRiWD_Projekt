@@ -1,4 +1,4 @@
-package com.example.polinav3;
+package com.example.polinav3.gamepad;
 
 import android.app.Service;
 import android.content.Intent;

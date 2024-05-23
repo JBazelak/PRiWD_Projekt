@@ -1,4 +1,4 @@
-package com.example.polinav3;
+package com.example.polinav3.gamepad;
 
 public class ButtonInput {
     public ButtonInput(ButtonType button, float axis, boolean pressed) {
