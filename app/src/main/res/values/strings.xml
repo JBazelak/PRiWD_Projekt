@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Polinav3</string>
+    <string name="button_test">UwU</string>
+    <string name="button_test2">Shake hands</string>
+    <string name="button_test3">Shake head</string>
+    <string name="button_test4">Time to twirl</string>
 </resources>
