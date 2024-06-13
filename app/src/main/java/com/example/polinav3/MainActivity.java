@@ -57,6 +57,8 @@ public class MainActivity extends TopBaseActivity {
     private void JoystickAction(float x1, float y1, float x2, float y2) {
 //        TextView v = findViewById(R.id.textStart);
 //        v.setText("X:"+String.valueOf(x)+"|Y:"+String.valueOf(y));
+        localGamepadConnector.Emit(new ButtonInput(ButtonType.LStick,x1,y1));
+        localGamepadConnector.Emit(new ButtonInput(ButtonType.RStick,x2,y2));
         Log.d("joystick1", "X:"+String.valueOf(x1)+"|Y:"+String.valueOf(y1));
         Log.d("joystick2", "X:"+String.valueOf(x2)+"|Y:"+String.valueOf(y2));
     }
@@ -71,13 +73,16 @@ public class MainActivity extends TopBaseActivity {
             case KeyEvent.KEYCODE_BUTTON_R1:
                 localGamepadConnector.Emit(new ButtonInput(ButtonType.RB,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_THUMBR:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.LT,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_THUMBL:
+                localGamepadConnector.Emit(new ButtonInput(ButtonType.RT,0,0));break;
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
             case KeyEvent.KEYCODE_DPAD_UP:
             case KeyEvent.KEYCODE_DPAD_DOWN:
             case KeyEvent.KEYCODE_BUTTON_START:
             case KeyEvent.KEYCODE_BUTTON_MODE://Big button in the middle
+                break;
             case KeyEvent.KEYCODE_BUTTON_B:
                 localGamepadConnector.Emit(new ButtonInput(ButtonType.B,0,0));break;
             case KeyEvent.KEYCODE_BUTTON_A:
