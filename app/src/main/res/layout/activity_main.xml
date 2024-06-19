@@ -1,19 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D0EFFF"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/buttonPodazanie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Podazanie za uzytkownikiem"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="#FF9999"/>
+
+    <Button
+        android:id="@+id/buttonRozmowa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rozmowa"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/buttonPodazanie"
+        android:layout_marginStart="16dp"
+        android:background="#FF9999"/>
+
+    <Button
+        android:id="@+id/buttonRozpoznawanie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rozpoznawanie"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/buttonRozmowa"
+        android:layout_marginStart="16dp"
+        android:background="#FF9999"/>
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/buttonRozpoznawanie"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="Enter How Much Cookies You Want"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonBack"
+        android:layout_marginTop="16dp">
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Projektor"
+                android:textSize="18sp"
+                android:gravity="start|center_vertical"/>
+            <Switch
+                android:id="@+id/switchProjektor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Światło"
+                android:textSize="18sp"
+                android:gravity="start|center_vertical"/>
+            <Switch
+                android:id="@+id/switchSwiatlo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Animacja życia"
+                android:textSize="18sp"
+                android:gravity="start|center_vertical"/>
+            <Switch
+                android:id="@+id/switchAnimacjaZycia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Pad"
+                android:textSize="18sp"
+                android:gravity="start|center_vertical"/>
+
+            <Switch
+                android:id="@+id/switchPad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Połączenie PC"
+                android:textSize="18sp"
+                android:gravity="start|center_vertical"/>
+            <Switch
+                android:id="@+id/switchPolaczniePC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"/>
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textViewBatteryStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stan baterii 30%"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/buttonPodazanie"
+        android:layout_marginStart="16dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarBattery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progress="30"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/textViewBatteryStatus"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentEnd="true"/>
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_launcher_foreground"/>
+
+    <View
+        android:id="@+id/viewCamera"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#D3D3D3"
+        android:contentDescription="Camera"/>
+
+    <View
+        android:id="@+id/viewKonsola"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/viewCamera"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="#FFFFFF"
+        android:contentDescription="Konsola (na PC okno rozwijane)"/>
+
+</RelativeLayout>
