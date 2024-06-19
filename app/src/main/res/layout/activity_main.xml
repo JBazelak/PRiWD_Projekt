@@ -14,7 +14,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
 
-        android:background="#FF9999"/>
+        android:background="#0043FF"/>
 
     <Button
         android:id="@+id/buttonRozmowa"
@@ -24,7 +24,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/buttonPodazanie"
         android:layout_marginStart="16dp"
-        android:background="#FF9999"/>
+        android:background="#0048FF"/>
 
     <Button
         android:id="@+id/buttonRozpoznawanie"
@@ -34,7 +34,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/buttonRozmowa"
         android:layout_marginStart="16dp"
-        android:background="#FF9999"/>
+        android:background="#002AFF"/>
 
     <ImageButton
         android:id="@+id/buttonBack"
@@ -64,7 +64,8 @@
             <Switch
                 android:id="@+id/switchProjektor"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
                 android:gravity="end|center_vertical"/>
         </TableRow>
 
@@ -79,7 +80,8 @@
             <Switch
                 android:id="@+id/switchSwiatlo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
                 android:gravity="end|center_vertical"/>
         </TableRow>
 
@@ -94,7 +96,8 @@
             <Switch
                 android:id="@+id/switchAnimacjaZycia"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
                 android:gravity="end|center_vertical"/>
         </TableRow>
 
@@ -110,8 +113,10 @@
             <Switch
                 android:id="@+id/switchPad"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end|center_vertical" />
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:gravity="end|center_vertical"
+                />
         </TableRow>
 
         <TableRow>
@@ -125,7 +130,8 @@
             <Switch
                 android:id="@+id/switchPolaczniePC"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
                 android:gravity="end|center_vertical"/>
         </TableRow>
     </TableLayout>
@@ -157,7 +163,9 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_launcher_foreground"/>
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="Logo of the application"
+        />
 
     <View
         android:id="@+id/viewCamera"
