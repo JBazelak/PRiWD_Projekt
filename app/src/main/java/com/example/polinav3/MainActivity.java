@@ -56,11 +56,12 @@ public class MainActivity extends TopBaseActivity {
 
     private void JoystickAction(float x1, float y1, float x2, float y2) {
 //        TextView v = findViewById(R.id.textStart);
-//        v.setText("X:"+String.valueOf(x)+"|Y:"+String.valueOf(y));
+//        v.setText("X1:"+String.valueOf(x1)+"|Y1:"+String.valueOf(y1)+"\r\nX2:"+String.valueOf(x2)+"|Y2:"+String.valueOf(y2));
         localGamepadConnector.Emit(new ButtonInput(ButtonType.LStick,x1,y1));
         localGamepadConnector.Emit(new ButtonInput(ButtonType.RStick,x2,y2));
         Log.d("joystick1", "X:"+String.valueOf(x1)+"|Y:"+String.valueOf(y1));
         Log.d("joystick2", "X:"+String.valueOf(x2)+"|Y:"+String.valueOf(y2));
+        Log.d("null","----");
     }
     @Override
     public  boolean dispatchKeyEvent(KeyEvent event) {
@@ -133,30 +134,35 @@ public class MainActivity extends TopBaseActivity {
         // the left control stick, hat axis, or the right control stick.
         float x1 = getCenteredAxis(event, inputDevice,
                 MotionEvent.AXIS_X, historyPos);
-        float x2=x1;
+        float x2=getCenteredAxis(event, inputDevice,
+                MotionEvent.AXIS_Z, historyPos);;
+//        float x2=x1;
+
         if (x1 == 0) {
             x1 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_HAT_X, historyPos);
         }
-        if (x2 == 0) {
-            x2 = getCenteredAxis(event, inputDevice,
-                    MotionEvent.AXIS_Z, historyPos);
-        }
+//        if (x2 == 0) {
+//            x2 = getCenteredAxis(event, inputDevice,
+//                    MotionEvent.AXIS_Z, historyPos);
+//        }
 
         // Calculate the vertical distance to move by
         // using the input value from one of these physical controls:
         // the left control stick, hat switch, or the right control stick.
         float y1 = getCenteredAxis(event, inputDevice,
                 MotionEvent.AXIS_Y, historyPos);
-        float y2=y1;
+        float y2=getCenteredAxis(event, inputDevice,
+                MotionEvent.AXIS_RZ, historyPos);
+//        float y2=y1;
         if (y1 == 0) {
             y1 = getCenteredAxis(event, inputDevice,
                     MotionEvent.AXIS_HAT_Y, historyPos);
         }
-        if (y2 == 0) {
-            y2 = getCenteredAxis(event, inputDevice,
-                    MotionEvent.AXIS_RZ, historyPos);
-        }
+//        if (y2 == 0) {
+//            y2 = getCenteredAxis(event, inputDevice,
+//                    MotionEvent.AXIS_RZ, historyPos);
+//        }
         JoystickAction(x1,y1,x2,y2);
         // Update the ship object based on the new x and y values
     }
