@@ -1,6 +1,8 @@
-package com.example.polinav3;
+package com.example.myapplication;
 
-import android.content.Intent;
+
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -9,14 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+public class MainActivity extends AppCompatActivity {
 
-import com.example.polinav3.gamepad.GameControllerService;
-import com.sanbot.opensdk.base.TopBaseActivity;
-
-public class MainActivity extends TopBaseActivity {
     private Button buttonPodazanie;
     private Button buttonRozmowa;
     private Button buttonRozpoznawanie;
@@ -47,10 +43,7 @@ public class MainActivity extends TopBaseActivity {
         textViewBatteryStatus = findViewById(R.id.textViewBatteryStatus);
         progressBarBattery = findViewById(R.id.progressBarBattery);
         imageViewLogo = findViewById(R.id.imageViewLogo);
-    }
 
-    @Override
-    protected void onMainServiceConnected() {
-
+        // Add functionality to your buttons and switches here
     }
 }
