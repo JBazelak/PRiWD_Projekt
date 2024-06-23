@@ -13,7 +13,6 @@
         android:text="Podazanie za uzytkownikiem"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-
         android:background="#0043FF"/>
 
     <Button
@@ -109,14 +108,12 @@
                 android:text="Pad"
                 android:textSize="18sp"
                 android:gravity="start|center_vertical"/>
-
             <Switch
                 android:id="@+id/switchPad"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:minWidth="48dp"
-                android:gravity="end|center_vertical"
-                />
+                android:gravity="end|center_vertical"/>
         </TableRow>
 
         <TableRow>
@@ -136,27 +133,6 @@
         </TableRow>
     </TableLayout>
 
-    <TextView
-        android:id="@+id/textViewBatteryStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stan baterii 30%"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/buttonPodazanie"
-        android:layout_marginStart="16dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarBattery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:progress="30"
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/textViewBatteryStatus"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_alignParentEnd="true"/>
-
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="200dp"
@@ -164,8 +140,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="Logo of the application"
-        />
+        android:contentDescription="Logo of the application"/>
+
+    <TextView
+        android:id="@+id/textViewBatteryStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonPodazanie"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="496dp"
+        android:text="Stan baterii 30%"
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/viewCamera"
@@ -190,5 +175,15 @@
         android:layout_marginStart="16dp"
         android:background="#FFFFFF"
         android:contentDescription="Konsola (na PC okno rozwijane)"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarBattery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progress="30"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"/>
 
 </RelativeLayout>
