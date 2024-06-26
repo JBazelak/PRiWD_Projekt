@@ -16,7 +16,7 @@ import com.sanbot.opensdk.function.unit.WingMotionManager;
 public class GameControllerService extends BindBaseService {
     private WheelMotionManager wheels;
     private WingMotionManager wings;
-    private int x, y;
+    private float x, y;
     public GameControllerService() {
         Log.d("test", "creating service");
     }
@@ -83,7 +83,7 @@ public class GameControllerService extends BindBaseService {
         return NoAngleWheelMotion.ACTION_STOP;
     }
 
-    public void move(int x, int y) {
+    public void move(float x, float y) {
         this.x = x;
         this.y = y;
     }

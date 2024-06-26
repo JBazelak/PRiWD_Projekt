@@ -42,6 +42,11 @@ public class MainActivity extends TopBaseActivity {
 //        v.setText("controllers:"+String.valueOf(list.size()));
 
         startService(new Intent(this, GameControllerService.class));
+        localGamepadConnector.addListener(b -> {
+            if (GameControllerService.INSTANCE != null) {
+                GameControllerService.INSTANCE.move(b.ax, b.ay);
+            }
+        });
     }
 
     @Override
