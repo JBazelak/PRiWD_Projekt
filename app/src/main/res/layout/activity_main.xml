@@ -8,58 +8,61 @@
 
     <Button
         android:id="@+id/buttonPodazanie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Podazanie za uzytkownikiem"
-        android:layout_marginTop="16dp"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:layout_marginStart="16dp"
-        android:background="#0043FF"/>
+        android:layout_marginTop="16dp"
+        android:background="#0043FF"
+        android:text="Podazanie za uzytkownikiem" />
 
     <Button
         android:id="@+id/buttonRozmowa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rozmowa"
-        android:layout_marginTop="16dp"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:layout_below="@id/buttonPodazanie"
         android:layout_marginStart="16dp"
-        android:background="#0048FF"/>
+        android:layout_marginTop="11dp"
+        android:background="#0048FF"
+        android:text="Rozmowa" />
 
     <Button
         android:id="@+id/buttonRozpoznawanie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rozpoznawanie"
-        android:layout_marginTop="16dp"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:layout_below="@id/buttonRozmowa"
         android:layout_marginStart="16dp"
-        android:background="#002AFF"/>
+        android:layout_marginTop="14dp"
+        android:background="#002AFF"
+        android:text="Rozpoznawanie" />
 
     <ImageButton
         android:id="@+id/buttonBack"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@id/buttonRozpoznawanie"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_marginTop="14dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Enter How Much Cookies You Want"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:src="@drawable/return_arrow" />
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonBack"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp">
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
                 android:minHeight="48dp"
                 android:text="Projektor"
-                android:textSize="18sp"
-                android:gravity="start|center_vertical"/>
+                android:textSize="18sp" />
+
             <Switch
                 android:id="@+id/switchProjektor"
                 android:layout_width="wrap_content"
@@ -100,20 +103,22 @@
                 android:gravity="end|center_vertical"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_height="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
                 android:minHeight="48dp"
                 android:text="Pad"
-                android:textSize="18sp"
-                android:gravity="start|center_vertical"/>
+                android:textSize="18sp" />
+
             <Switch
                 android:id="@+id/switchPad"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:minWidth="48dp"
-                android:gravity="end|center_vertical"/>
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
         </TableRow>
 
         <TableRow>
@@ -135,55 +140,56 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="292dp"
+        android:layout_height="247dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="Logo of the application"/>
+        android:contentDescription="Logo of the application"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/textViewBatteryStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_below="@id/buttonPodazanie"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="496dp"
+        android:layout_marginTop="600dp"
         android:text="Stan baterii 30%"
         android:textSize="18sp" />
 
     <View
         android:id="@+id/viewCamera"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="200dp"
+        android:layout_height="203dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="16dp"
         android:background="#D3D3D3"
-        android:contentDescription="Camera"/>
+        android:contentDescription="Camera" />
 
     <View
         android:id="@+id/viewKonsola"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
+        android:layout_width="195dp"
+        android:layout_height="131dp"
         android:layout_below="@id/viewCamera"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="49dp"
+        android:layout_marginEnd="16dp"
         android:background="#FFFFFF"
-        android:contentDescription="Konsola (na PC okno rozwijane)"/>
+        android:contentDescription="Konsola (na PC okno rozwijane)" />
 
-    <ProgressBar
-        android:id="@+id/progressBarBattery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:progress="30"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"/>
+    <!-- <ProgressBar
+         android:id="@+id/progressBarBattery"
+         android:layout_width="205dp"
+         android:layout_height="51dp"
+         android:layout_alignParentEnd="true"
+         android:layout_alignParentBottom="true"
+         android:layout_marginEnd="16dp"
+         android:layout_marginBottom="13dp"
+         android:progress="30" /> -->
 
 </RelativeLayout>

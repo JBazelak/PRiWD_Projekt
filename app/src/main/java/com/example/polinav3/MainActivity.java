@@ -1,8 +1,6 @@
-package com.example.myapplication;
+package com.example.polinav3;
 
 
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -10,8 +8,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.sanbot.opensdk.base.TopBaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TopBaseActivity {
 
     private Button buttonPodazanie;
     private Button buttonRozmowa;
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        register(MainActivity.class);
 
         buttonPodazanie = findViewById(R.id.buttonPodazanie);
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
@@ -41,9 +41,12 @@ public class MainActivity extends AppCompatActivity {
         switchPad = findViewById(R.id.switchPad);
         switchPolaczniePC = findViewById(R.id.switchPolaczniePC);
         textViewBatteryStatus = findViewById(R.id.textViewBatteryStatus);
-        progressBarBattery = findViewById(R.id.progressBarBattery);
+        //progressBarBattery = findViewById(R.id.progressBarBattery);
         imageViewLogo = findViewById(R.id.imageViewLogo);
 
         // Add functionality to your buttons and switches here
+    }
+    @Override
+    protected void onMainServiceConnected() {
     }
 }
