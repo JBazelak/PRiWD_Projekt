@@ -42,6 +42,15 @@ public class MainActivity extends TopBaseActivity {
 //        v.setText("controllers:"+String.valueOf(list.size()));
 
         startService(new Intent(this, GameControllerService.class));
+        localGamepadConnector.addListener(b -> {
+            if (GameControllerService.INSTANCE != null) {
+                if (b.button == ButtonType.LStick) {
+                    GameControllerService.INSTANCE.move(b.ax, -b.ay);
+                } else if (b.button == ButtonType.A) {
+                    GameControllerService.INSTANCE.stop();
+                }
+            }
+        });
     }
 
     @Override
@@ -55,19 +64,11 @@ public class MainActivity extends TopBaseActivity {
     }
 
     private void JoystickAction(float x1, float y1, float x2, float y2) {
-//        TextView v = findViewById(R.id.textStart);
-//        v.setText("X1:"+String.valueOf(x1)+"|Y1:"+String.valueOf(y1)+"\r\nX2:"+String.valueOf(x2)+"|Y2:"+String.valueOf(y2));
         localGamepadConnector.Emit(new ButtonInput(ButtonType.LStick,x1,y1));
         localGamepadConnector.Emit(new ButtonInput(ButtonType.RStick,x2,y2));
-        Log.d("joystick1", "X:"+String.valueOf(x1)+"|Y:"+String.valueOf(y1));
-        Log.d("joystick2", "X:"+String.valueOf(x2)+"|Y:"+String.valueOf(y2));
-        Log.d("null","----");
     }
     @Override
     public  boolean dispatchKeyEvent(KeyEvent event) {
-        Log.d("test", "button");
-//        TextView v = findViewById(R.id.textStart);
-//        v.setText("button:"+String.valueOf(event.getKeyCode()));
         switch(event.getKeyCode()) {
             case KeyEvent.KEYCODE_BUTTON_L1:
                 localGamepadConnector.Emit(new ButtonInput(ButtonType.LB,0,0));break;
