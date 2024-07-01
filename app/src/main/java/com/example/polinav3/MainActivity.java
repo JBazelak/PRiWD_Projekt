@@ -21,6 +21,7 @@ public class MainActivity extends TopBaseActivity {
     private Switch switchAnimacjaZycia;
     private Switch switchPad;
     private Switch switchPolaczniePC;
+    private Switch switchSzwendacz;
     private TextView textViewBatteryStatus;
     private ProgressBar progressBarBattery;
     private ImageView imageViewLogo;
@@ -31,7 +32,7 @@ public class MainActivity extends TopBaseActivity {
         setContentView(R.layout.activity_main);
         register(MainActivity.class);
 
-        buttonPodazanie = findViewById(R.id.buttonPodazanie);
+       // buttonPodazanie = findViewById(R.id.buttonPodazanie);
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
         buttonBack = findViewById(R.id.buttonBack);
@@ -41,6 +42,7 @@ public class MainActivity extends TopBaseActivity {
         switchPad = findViewById(R.id.switchPad);
         switchPolaczniePC = findViewById(R.id.switchPolaczniePC);
         textViewBatteryStatus = findViewById(R.id.textViewBatteryStatus);
+        switchSzwendacz = findViewById(R.id.switchSzwendacz);
         //progressBarBattery = findViewById(R.id.progressBarBattery);
         imageViewLogo = findViewById(R.id.imageViewLogo);
 
