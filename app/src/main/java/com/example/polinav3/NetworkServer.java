@@ -15,39 +15,44 @@ public class NetworkServer extends Thread {
     private ServerSocket serverSocket;
     private int port = 30000;
 
-
     private Socket clientSocket;
-    private BufferedReader br;
 
     //przechowuje i emituje Socket'y
-//    private List<Thread> controllers;
+    private List<NetworkController> controllers;
 
     public void run(){
-//        controllers = new ArrayList<Thread>();
+        controllers = new ArrayList<NetworkController>();
         try {
             Log.d("nep", "thread start");
             serverSocket = new ServerSocket(port);
-            clientSocket = serverSocket.accept();
-            Log.d("nep", "socket accept");
-            br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String out;
-//            out = br.readLine();
-            while((out = br.readLine())!=null){
-                Log.d("nep", out);
+
+            while(true){
+                clientSocket = serverSocket.accept();
+                Log.d("nep", "client accept");
+                controllers.add(new NetworkController(clientSocket));
+                controllers.get(controllers.size()-1).run();
             }
+
 
         } catch(Exception e) {
             System.out.println(e);
+            Log.d("nep", e.toString());
         }
-        Log.d("nep", "test");
+//        Log.d("nep", "test");
     }
     public void shutdown(){
         try {
-            br.close();
-            clientSocket.close();
+            int i=0;
+            for(NetworkController nc : controllers){
+                nc.shutdown();
+                nc.interrupt();
+                Log.d("nep", "Controller "+i);
+                i++;
+            }
             serverSocket.close();
         } catch (Exception e) {
             System.out.println(e);
+            Log.d("nep", e.toString());
         }
     }
 
