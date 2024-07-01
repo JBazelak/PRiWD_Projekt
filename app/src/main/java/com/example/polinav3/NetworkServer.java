@@ -25,11 +25,13 @@ public class NetworkServer extends Thread {
     public void run(){
 //        controllers = new ArrayList<Thread>();
         try {
+            Log.d("nep", "thread start");
             serverSocket = new ServerSocket(port);
             clientSocket = serverSocket.accept();
+            Log.d("nep", "socket accept");
             br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String out;
-            out = br.readLine();
+//            out = br.readLine();
             while((out = br.readLine())!=null){
                 Log.d("nep", out);
             }
