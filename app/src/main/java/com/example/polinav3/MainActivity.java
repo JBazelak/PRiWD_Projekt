@@ -22,6 +22,8 @@ public class MainActivity extends TopBaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Thread net = new NetworkServer();
+        net.start();
     }
 
     @Override
