@@ -120,7 +120,7 @@ public class MainActivity extends TopBaseActivity {
                 switchSzwendacz.setChecked(!isChecked); // Revert switch state
             }
         });
-     //   openStream();
+       // openStream();
     }
 
     private void startBatteryLevelChecker() {
@@ -207,32 +207,20 @@ public class MainActivity extends TopBaseActivity {
         return new OperationResult(true);
     }
 
-   /* public OperationResult openStream(StreamOption streamOption) {
+    public OperationResult openStream(StreamOption streamOption) {
         streamOption.setChannel(StreamOption.MAIN_STREAM);
         streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
         streamOption.setJustIframe(false);
 
         // Wywołanie metody openStream z hdCameraManager
-        com.sanbot.opensdk.beans.OperationResult result = hdCameraManager.openStream(streamOption);
-        int resultId = Integer.valueOf(result.getResult());
+        hdCameraManager.openStream(streamOption);
+        return new OperationResult(true);
+    }
 
-        if (resultId != -1) {
-            streamId = resultId; // Ustaw aktualny identyfikator strumienia
-            handleList.add(streamId);
-            Log.d("MainActivity", "Otwarto strumień o ID: " + streamId);
-        } else {
-            Log.e("MainActivity", "Nie udało się otworzyć strumienia.");
-            // Obsługa błędu otwarcia strumienia
-        }
-    } */
-
-   /* public OperationResult closeStream(int handle) {
-        com.sanbot.opensdk.beans.OperationResult result = hdCameraManager.closeStream(handle);
-        if (result.isSuccessful()) {
-            streamId = 0; // Zeruj identyfikator strumienia
-        }
-        return result; // Zwróć wynik operacji
-    } */
+    public OperationResult closeStream(int handle) {
+        hdCameraManager.closeStream(handle);
+        return new OperationResult(true);
+    }
     public interface MediaListener {
         void getVideoStream(byte[] data);
         void getAudioStream(byte[] data);
