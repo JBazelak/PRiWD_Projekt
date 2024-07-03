@@ -13,11 +13,13 @@ import com.sanbot.opensdk.function.unit.HandMotionManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 import com.sanbot.opensdk.function.unit.WingMotionManager;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class GameControllerService extends BindBaseService {
     private WheelMotionManager wheels;
     private WingMotionManager wings;
-    private float x, y;
     private boolean running = true;
+    private AtomicInteger lastAction = new AtomicInteger(-1);
     public GameControllerService() {
         Log.d("test", "creating service");
     }
@@ -54,14 +56,14 @@ public class GameControllerService extends BindBaseService {
 
     private void roboLoop() {
         while (running) {
-            if (this.y != 0 || this.x != 0) {
-                byte action = xyToAction(x, y);
-                Log.d("action", String.valueOf(action));
-                wheels.doNoAngleMotion(new NoAngleWheelMotion(action, 3, 125));
+            byte action = lastAction.byteValue();
+            Log.d("test", "looping last action = " + action);
+            if (action != NoAngleWheelMotion.ACTION_STOP && action != -1) {
+                wheels.doNoAngleMotion(new NoAngleWheelMotion(action, 3, 3000));
             }
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(2800);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -105,11 +107,20 @@ public class GameControllerService extends BindBaseService {
     }
 
     public void move(float x, float y) {
-        this.x = x;
-        this.y = y;
+        Log.d("test", "moving");
+        if (y != 0 || x != 0) {
+            byte action = xyToAction(x, y);
+            Log.d("test", "not still, action = " + action);
+            if (lastAction.getAndSet(action) != action) {
+                Log.d("action", String.valueOf(action));
+                wheels.doNoAngleMotion(new NoAngleWheelMotion(action, 3, 6000));
+            }
+        }
     }
 
     public void stop() {
+        Log.d("test", "stopping");
+        lastAction.set(NoAngleWheelMotion.ACTION_STOP);
         wheels.doNoAngleMotion(new NoAngleWheelMotion(NoAngleWheelMotion.ACTION_STOP, 0));
     }
 }
