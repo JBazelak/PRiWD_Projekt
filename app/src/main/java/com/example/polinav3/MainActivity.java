@@ -1,5 +1,6 @@
 package com.example.polinav3;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,6 +16,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.polinav3.gamepad.ButtonInput;
+import com.example.polinav3.gamepad.ButtonType;
+import com.example.polinav3.gamepad.GameControllerService;
+import com.example.polinav3.gamepad.LocalGamepadConnector;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.ErrorCode;
 import com.sanbot.opensdk.beans.FuncConstant;
@@ -23,23 +28,11 @@ import com.sanbot.opensdk.function.unit.HDCameraManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.ModularMotionManager;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
+import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.example.polinav3.gamepad.ButtonInput;
-import com.example.polinav3.gamepad.ButtonType;
-import com.example.polinav3.gamepad.GameControllerService;
-import com.example.polinav3.gamepad.LocalGamepadConnector;
-import com.sanbot.opensdk.base.TopBaseActivity;
-import com.sanbot.opensdk.beans.FuncConstant;
-import com.sanbot.opensdk.function.unit.SpeechManager;
-
-import java.util.ArrayList;
 
 public class MainActivity extends TopBaseActivity {
     private Button buttonPodazanie;
@@ -79,11 +72,12 @@ public class MainActivity extends TopBaseActivity {
         super.onCreate(savedInstanceState);
         register(MainActivity.class);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
 
 
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
