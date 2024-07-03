@@ -1,19 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D0EFFF"
     tools:context=".MainActivity">
 
-    <TextView
+  <!--  <Button
+        android:id="@+id/buttonPodazanie"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="#0043FF"
+        android:text="Podazanie za uzytkownikiem" />!-->
+
+    <Button
+        android:id="@+id/buttonRozmowa"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:background="#0048FF"
+        android:text="Rozmowa" />
+
+    <Button
+        android:id="@+id/buttonRozpoznawanie"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/buttonRozmowa"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:background="#002AFF"
+        android:text="Rozpoznawanie" />
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="85dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/buttonRozpoznawanie"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Enter How Much Cookies You Want"
+        android:src="@drawable/return_arrow" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@id/buttonBack"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Projektor"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchProjektor"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Światło"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchSwiatlo"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Animacja życia"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchAnimacjaZycia"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+
+        <TableRow android:layout_height="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Pad"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchPad"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Połączenie PC"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchPolaczniePC"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="Szwendacz"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switchSzwendacz"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="end|center_vertical"
+                android:minWidth="48dp" />
+        </TableRow>
+    </TableLayout>
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="331dp"
+        android:layout_height="543dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/tableLayout"
+        android:contentDescription="Logo of the application"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/textViewBatteryStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/buttonRozmowa"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="600dp"
+        android:text="Stan baterii 30%"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/viewCamera"
+        android:layout_width="435dp"
+        android:layout_height="320dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="20dp"
+        android:background="#D3D3D3"
+        android:contentDescription="Camera" />
+
+    <View
+        android:id="@+id/viewKonsola"
+        android:layout_width="435dp"
+        android:layout_height="320dp"
+        android:layout_below="@+id/viewCamera"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="42dp"
+        android:background="#FFFFFF"
+        android:contentDescription="Konsola (na PC okno rozwijane)" />
+
+    <!-- <ProgressBar
+         android:id="@+id/progressBarBattery"
+         android:layout_width="205dp"
+         android:layout_height="51dp"
+         android:layout_alignParentEnd="true"
+         android:layout_alignParentBottom="true"
+         android:layout_marginEnd="16dp"
+         android:layout_marginBottom="13dp"
+         android:progress="30" /> -->
+
+</RelativeLayout>
