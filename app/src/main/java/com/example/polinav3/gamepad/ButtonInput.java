@@ -1,13 +1,13 @@
 package com.example.polinav3.gamepad;
 
 public class ButtonInput {
-    public ButtonInput(ButtonType button, float axis, boolean pressed) {
+    public ButtonInput(ButtonType button, float ax, float ay) {
         this.button = button;
-        this.axis = axis;
-        this.pressed = pressed;
+        this.ax = ax;
+        this.ay = ay;
     }
 
     public final ButtonType button;
-    public final float axis;
-    public final boolean pressed;
+    public final float ax;
+    public final float ay;
 }
