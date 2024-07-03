@@ -1,13 +1,8 @@
 package com.example.polinav3;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -16,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.BroadcastReceiver;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.ErrorCode;
@@ -27,12 +21,9 @@ import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.ModularMotionManager;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
-import com.sanbot.opensdk.function.unit.interfaces.media.MediaListener;
-
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MainActivity extends TopBaseActivity {
 
@@ -70,8 +61,8 @@ public class MainActivity extends TopBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         register(MainActivity.class);
+        setContentView(R.layout.activity_main);
 
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
