@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.polinav3.AI_prediction.Recognition;
 import com.example.polinav3.gamepad.ButtonInput;
 import com.example.polinav3.gamepad.ButtonType;
 import com.example.polinav3.gamepad.GameControllerService;
@@ -82,6 +83,10 @@ public class MainActivity extends TopBaseActivity {
 
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
+        buttonRozpoznawanie.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Recognition.class);
+            startActivity(intent);
+        });
         buttonBack = findViewById(R.id.buttonBack);
         switchProjektor = findViewById(R.id.switchProjektor);
         switchSwiatlo = findViewById(R.id.switchSwiatlo);

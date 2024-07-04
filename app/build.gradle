@@ -38,6 +38,7 @@ dependencies {
     implementation files('../libs/SanbotOpenSDK_2.0.1.10.aar')
     implementation libs.appcompat.v7
     implementation libs.gson
+    implementation libs.activity
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
