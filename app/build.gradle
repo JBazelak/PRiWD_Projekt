@@ -39,6 +39,7 @@ dependencies {
     implementation libs.appcompat.v7
     implementation libs.gson
     implementation libs.activity
+    implementation 'androidx.annotation:annotation:1.2.0'
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

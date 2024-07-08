@@ -8,23 +8,6 @@
     android:background="#D0EFFF"
     tools:context=".AI_prediction.Recognition">
 
-    <ImageView
-        android:id="@+id/imageFromCamera"
-        android:layout_width="496dp"
-        android:layout_height="451dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="174dp"
-        android:layout_marginBottom="20dp"
-        android:contentDescription="Taken photo"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002"
-       android:src="@drawable/logo" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="146dp"
@@ -33,9 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.195"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageFromCamera"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -46,7 +27,6 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageFromCamera"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.49">
 
@@ -125,5 +105,20 @@
                 android:textSize="24dp" />
         </LinearLayout>
     </LinearLayout>
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="590dp"
+        android:layout_height="615dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="266dp"
+        android:layout_marginBottom="43dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
