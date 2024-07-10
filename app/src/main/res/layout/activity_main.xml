@@ -167,7 +167,7 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="331dp"
         android:layout_height="543dp"
-        android:layout_marginStart="190dp"
+        android:layout_marginStart="125dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@+id/tableLayout"
         android:contentDescription="Logo of the application"
@@ -186,8 +186,8 @@
 
     <SurfaceView
         android:id="@+id/surfaceViewCamera"
-        android:layout_width="458dp"
-        android:layout_height="624dp"
+        android:layout_width="520dp"
+        android:layout_height="615dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="16dp"

@@ -85,6 +85,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         setContentView(R.layout.activity_main);
         cameraTread = new CameraHandlerThread();
 
+
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -422,38 +423,17 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         startCamera(holder.getSurface());
-        //mediaStreamManager.openStream(holder.getSurface());
     }
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-        closeCamera(holder.getSurface());
-        //mediaStreamManager.changeSurface(holder.getSurface(), format, width, height);
+        mediaStreamManager.changeSurface(holder.getSurface(), format, width, height);
     }
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-        mediaStreamManager.closeStream(holder.getSurface());
+        closeCamera(holder.getSurface());
     }
-
-//    public OperationResult openStream(StreamOption streamOption) {
-//        streamOption.setChannel(StreamOption.MAIN_STREAM);
-//        streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
-//        streamOption.setJustIframe(false);
-//
-//        // Wywołanie metody openStream z hdCameraManager
-//        hdCameraManager.openStream(streamOption);
-//        return new OperationResult(true);
-//    }
-
-//    public OperationResult closeStream(int handle) {
-//        hdCameraManager.closeStream(handle);
-//        return new OperationResult(true);
-//    }
-//    public interface MediaListener {
-//        void getVideoStream(byte[] data);
-//        void getAudioStream(byte[] data);
-//    }
 
     // Define OperationResult class
     public static class OperationResult {
@@ -503,15 +483,11 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mediaStreamManager.openStream(sv.getHolder().getSurface());
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        sv.getHolder().addCallback(this);
+//        startCamera(sv.getHolder().getSurface());
+//    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mediaStreamManager.closeStream(sv.getHolder().getSurface());
-    }
 }

@@ -39,6 +39,9 @@ public class MediaStreamManager {
         Log.i(TAG, "surfaceCreated: operationResult=" + operationResult.getResult());
         int result = Integer.valueOf(operationResult.getResult());
         if (result != -1) {
+            if (handleList == null) {
+                handleList = new ArrayList<>();
+            }
             handleList.add(result);
             mediaDecoder.setSurface(surface);
         }

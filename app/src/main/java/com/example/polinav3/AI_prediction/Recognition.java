@@ -38,10 +38,11 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
         mediaStreamManager = new MediaStreamManager(hdCameraManager, mediaDecoder);
         sv= findViewById(R.id.surfaceView);
         sv.getHolder().addCallback(this);
-        mediaStreamManager.openStream(sv.getHolder().getSurface());
+        //mediaStreamManager.openStream(sv.getHolder().getSurface());
         Log.i("Camera-AI", "Stworzono nową kamera view" );
         returnButton = findViewById(R.id.returnButton);
         returnButton.setOnClickListener(v -> {
+            mediaStreamManager.closeStream(sv.getHolder().getSurface());
             finish();
         });
 
@@ -62,10 +63,11 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     }
 
 
-    @Override
+   // @Override
     protected void onDestroy() {
-        mediaStreamManager.closeStream(sv.getHolder().getSurface());
         super.onDestroy();
+        //Surface surface
+        //cameraTread.postTask(() -> mediaStreamManager.closeStream(surface));
 
     }
 
