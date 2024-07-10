@@ -184,31 +184,15 @@
         android:text="Stan baterii 30%"
         android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/viewCamera"
-        android:layout_width="435dp"
-        android:layout_height="320dp"
+    <SurfaceView
+        android:id="@+id/surfaceViewCamera"
+        android:layout_width="458dp"
+        android:layout_height="624dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
-        android:layout_marginEnd="20dp"
-        android:background="#D3D3D3"
-        android:contentDescription="Camera" />
-
-    <View
-        android:id="@+id/viewKonsola"
-        android:layout_width="435dp"
-        android:layout_height="320dp"
-        android:layout_below="@+id/viewCamera"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="42dp"
-        android:background="#FFFFFF"
-        android:contentDescription="Konsola (na PC okno rozwijane)" />
+        android:layout_marginEnd="20dp" />
 
     <!-- <ProgressBar
          android:id="@+id/progressBarBattery"

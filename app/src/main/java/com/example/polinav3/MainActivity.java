@@ -7,24 +7,30 @@ import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.polinav3.AI_prediction.Recognition;
 import com.example.polinav3.gamepad.ButtonInput;
 import com.example.polinav3.gamepad.ButtonType;
 import com.example.polinav3.gamepad.GameControllerService;
 import com.example.polinav3.gamepad.LocalGamepadConnector;
+import com.example.polinav3.video.CameraHandlerThread;
+import com.example.polinav3.video.MediaStreamManager;
+import com.example.polinav3.video.VisionMediaDecoder;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.ErrorCode;
 import com.sanbot.opensdk.beans.FuncConstant;
-import com.sanbot.opensdk.function.beans.StreamOption;
 import com.sanbot.opensdk.function.unit.HDCameraManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.ModularMotionManager;
@@ -35,8 +41,7 @@ import com.sanbot.opensdk.function.unit.SystemManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends TopBaseActivity {
-    private Button buttonPodazanie;
+public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callback {
     private Button buttonRozmowa;
     private Button buttonRozpoznawanie;
     private ImageButton buttonBack;
@@ -47,17 +52,22 @@ public class MainActivity extends TopBaseActivity {
     private Switch switchPolaczniePC;
     private Switch switchSzwendacz;
     private TextView textViewBatteryStatus;
-    private ProgressBar progressBarBattery;
     private ImageView imageViewLogo;
 
-    private ImageView viewCamera;
     private Runnable batteryCheckRunnable;
     private List<Integer> handleList = new ArrayList<>();
 
 
     ProjectorManager projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
     HardWareManager hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-    HDCameraManager hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+    //HDCameraManager hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+
+    //Camera
+    private HDCameraManager hdCameraManager;
+    private MediaStreamManager mediaStreamManager;
+    private SurfaceView sv;
+    private VisionMediaDecoder mediaDecoder;
+    private CameraHandlerThread cameraTread;
 
     ModularMotionManager modularMotionManager = (ModularMotionManager) getUnitManager(FuncConstant.MODULARMOTION_MANAGER);
 
@@ -73,6 +83,7 @@ public class MainActivity extends TopBaseActivity {
         super.onCreate(savedInstanceState);
         register(MainActivity.class);
         setContentView(R.layout.activity_main);
+        cameraTread = new CameraHandlerThread();
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -80,10 +91,10 @@ public class MainActivity extends TopBaseActivity {
 //            return insets;
 //        });
 
-
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
         buttonRozpoznawanie.setOnClickListener(v -> {
+            mediaStreamManager.closeStream(sv.getHolder().getSurface());
             Intent intent = new Intent(MainActivity.this, Recognition.class);
             startActivity(intent);
         });
@@ -96,7 +107,6 @@ public class MainActivity extends TopBaseActivity {
         textViewBatteryStatus = findViewById(R.id.textViewBatteryStatus);
         switchSzwendacz = findViewById(R.id.switchSzwendacz);
         imageViewLogo = findViewById(R.id.imageViewLogo);
-        viewCamera = findViewById(R.id.viewCamera);
 
         buttonBack.setOnClickListener(v -> {
             //   closeStream(streamId); // Call method to close stream
@@ -141,6 +151,13 @@ public class MainActivity extends TopBaseActivity {
                 switchSzwendacz.setChecked(!isChecked); // Revert switch state
             }
         });
+
+        hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+        mediaDecoder = new VisionMediaDecoder();
+        mediaStreamManager = new MediaStreamManager(hdCameraManager, mediaDecoder);
+        sv= findViewById(R.id.surfaceViewCamera);
+        sv.getHolder().addCallback(this);
+
         // openStream();
     }
 
@@ -192,6 +209,11 @@ public class MainActivity extends TopBaseActivity {
 //                return super.onKeyDown(event.getKeyCode(), event);
         }
         return super.onKeyDown(event.getKeyCode(), event);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 
     @Override
@@ -388,24 +410,50 @@ public class MainActivity extends TopBaseActivity {
         return new OperationResult(true);
     }
 
-    public OperationResult openStream(StreamOption streamOption) {
-        streamOption.setChannel(StreamOption.MAIN_STREAM);
-        streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
-        streamOption.setJustIframe(false);
-
-        // Wywołanie metody openStream z hdCameraManager
-        hdCameraManager.openStream(streamOption);
-        return new OperationResult(true);
+    private void startCamera(Surface surface) {
+        cameraTread.postTask(() -> mediaStreamManager.openStream(surface));
     }
 
-    public OperationResult closeStream(int handle) {
-        hdCameraManager.closeStream(handle);
-        return new OperationResult(true);
+
+    private void closeCamera (Surface surface){
+        cameraTread.postTask(() -> mediaStreamManager.closeStream(surface));
     }
-    public interface MediaListener {
-        void getVideoStream(byte[] data);
-        void getAudioStream(byte[] data);
+
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        startCamera(holder.getSurface());
+        //mediaStreamManager.openStream(holder.getSurface());
     }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        closeCamera(holder.getSurface());
+        //mediaStreamManager.changeSurface(holder.getSurface(), format, width, height);
+    }
+
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+        mediaStreamManager.closeStream(holder.getSurface());
+    }
+
+//    public OperationResult openStream(StreamOption streamOption) {
+//        streamOption.setChannel(StreamOption.MAIN_STREAM);
+//        streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
+//        streamOption.setJustIframe(false);
+//
+//        // Wywołanie metody openStream z hdCameraManager
+//        hdCameraManager.openStream(streamOption);
+//        return new OperationResult(true);
+//    }
+
+//    public OperationResult closeStream(int handle) {
+//        hdCameraManager.closeStream(handle);
+//        return new OperationResult(true);
+//    }
+//    public interface MediaListener {
+//        void getVideoStream(byte[] data);
+//        void getAudioStream(byte[] data);
+//    }
 
     // Define OperationResult class
     public static class OperationResult {
@@ -453,5 +501,17 @@ public class MainActivity extends TopBaseActivity {
         if (handler != null && batteryCheckRunnable != null) {
             handler.removeCallbacks(batteryCheckRunnable);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaStreamManager.openStream(sv.getHolder().getSurface());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaStreamManager.closeStream(sv.getHolder().getSurface());
     }
 }
