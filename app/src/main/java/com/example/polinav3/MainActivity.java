@@ -60,7 +60,6 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 
     ProjectorManager projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
     HardWareManager hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-    //HDCameraManager hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
 
     //Camera
     private HDCameraManager hdCameraManager;
@@ -111,7 +110,8 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 
         buttonBack.setOnClickListener(v -> {
             //   closeStream(streamId); // Call method to close stream
-            finish(); // Close the application
+            //finish(); // Close the application
+            finish();
         });
 
         startService(new Intent(this, GameControllerService.class));
@@ -486,8 +486,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 //    @Override
 //    protected void onResume() {
 //        super.onResume();
-//        sv.getHolder().addCallback(this);
-//        startCamera(sv.getHolder().getSurface());
+//        mediaStreamManager.openStream(sv.getHolder().getSurface());
 //    }
 
 }

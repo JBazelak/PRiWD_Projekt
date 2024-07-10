@@ -1,5 +1,6 @@
 package com.example.polinav3.AI_prediction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
@@ -9,6 +10,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 
+import com.example.polinav3.MainActivity;
 import com.example.polinav3.R;
 import com.example.polinav3.video.CameraHandlerThread;
 import com.example.polinav3.video.MediaStreamManager;
@@ -42,8 +44,11 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
         Log.i("Camera-AI", "Stworzono nową kamera view" );
         returnButton = findViewById(R.id.returnButton);
         returnButton.setOnClickListener(v -> {
+//            mediaStreamManager.closeStream(sv.getHolder().getSurface());
+//            finish();
             mediaStreamManager.closeStream(sv.getHolder().getSurface());
-            finish();
+            Intent intent = new Intent(Recognition.this, MainActivity.class);
+            startActivity(intent);
         });
 
     }
@@ -63,11 +68,10 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     }
 
 
-   // @Override
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Surface surface
-        //cameraTread.postTask(() -> mediaStreamManager.closeStream(surface));
+        mediaStreamManager.closeStream(sv.getHolder().getSurface());
 
     }
 
@@ -79,7 +83,6 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         startCamera(holder.getSurface());
-        //mediaStreamManager.openStream(holder.getSurface());
     }
 
     @Override
@@ -90,6 +93,5 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         closeCamera(holder.getSurface());
-        //mediaStreamManager.closeStream(holder.getSurface());
     }
 }
