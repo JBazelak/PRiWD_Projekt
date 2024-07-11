@@ -17,7 +17,11 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 
 import com.example.polinav3.AI_prediction.Recognition;
@@ -92,6 +96,13 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 //        });
 
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
+        buttonRozmowa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
         buttonRozpoznawanie.setOnClickListener(v -> {
             mediaStreamManager.closeStream(sv.getHolder().getSurface());
