@@ -6,7 +6,11 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -28,6 +32,11 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     private SurfaceView sv;
     private ImageButton returnButton;
     private CameraHandlerThread cameraTread;
+    private Button buttonTakeAPhoto;
+    private ImageView testView;
+    private TextView ageView;
+    private TextView genderView;
+    private TextView emotionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,23 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
             Intent intent = new Intent(Recognition.this, MainActivity.class);
             startActivity(intent);
         });
-
+        buttonTakeAPhoto = findViewById(R.id.buttonTakeAPhoto);
+        testView = findViewById(R.id.testView);
+        ageView = findViewById(R.id.textViewAge);
+        genderView = findViewById(R.id.textViewSex);
+        emotionView = findViewById(R.id.textViewEmotion);
+        buttonTakeAPhoto.setOnClickListener(v -> {
+            Bitmap bitmap = hdCameraManager.getVideoImage();
+            if (bitmap != null){
+                testView.setImageBitmap(bitmap);
+                String[] prediction = getPrediction(bitmap);
+                if (prediction != null) {
+                    ageView.setText(prediction[0]);
+                    genderView.setText(prediction[1]);
+                    emotionView.setText(prediction[2]);
+                }
+            }
+        });
     }
 
     @Override
@@ -72,7 +97,6 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     protected void onDestroy() {
         super.onDestroy();
         mediaStreamManager.closeStream(sv.getHolder().getSurface());
-
     }
 
     @Override
@@ -93,5 +117,12 @@ public class Recognition extends TopBaseActivity implements SurfaceHolder.Callba
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         closeCamera(holder.getSurface());
+    }
+
+    public String[] getPrediction(Bitmap bitmap){
+        //send bitmap to server
+        //get prediction
+        //return prediction
+        return null;
     }
 }

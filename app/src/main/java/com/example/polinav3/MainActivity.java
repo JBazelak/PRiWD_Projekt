@@ -111,7 +111,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         buttonBack.setOnClickListener(v -> {
             //   closeStream(streamId); // Call method to close stream
             //finish(); // Close the application
-            finish();
+            finishAffinity();
         });
 
         startService(new Intent(this, GameControllerService.class));
@@ -489,4 +489,14 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 //        mediaStreamManager.openStream(sv.getHolder().getSurface());
 //    }
 
+
+ //   @Override
+//    protected void onPause() {
+//        super.onPause();
+//        try {
+//            cameraTread.wait();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
