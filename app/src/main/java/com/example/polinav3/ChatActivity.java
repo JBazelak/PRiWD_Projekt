@@ -1,4 +1,5 @@
 package com.example.polinav3;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +25,8 @@ public class ChatActivity extends AppCompatActivity {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+                startActivity(intent);;
             }
         });
 
