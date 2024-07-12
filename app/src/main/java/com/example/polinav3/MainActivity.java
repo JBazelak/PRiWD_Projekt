@@ -1,7 +1,14 @@
 package com.example.polinav3;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.view.InputDevice;
@@ -35,6 +42,7 @@ import com.example.polinav3.video.VisionMediaDecoder;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.ErrorCode;
 import com.sanbot.opensdk.beans.FuncConstant;
+import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.unit.HDCameraManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.ModularMotionManager;
@@ -42,6 +50,8 @@ import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,16 +86,30 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 
     SystemManager systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
     private boolean projectorEnabled = false;
+    private static boolean lightOn = false;
+    private static boolean projektorOn = false;
+    private static boolean animacjaOn = false;
+    private static boolean padOn = false;
+    private static boolean polaczenieOn = false;
+    private static boolean szwendaczOn = false;
     private long lastSwitchTime = 0;
     private Handler handler = new Handler();
+
+    public HardWareManager getHardWareManager() {
+        return hardWareManager;
+    }
+
+    private Runnable delayedProjectorOffRunnable;
     private int streamId;
     private LocalGamepadConnector localGamepadConnector = new LocalGamepadConnector();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // Log.d("testo", "oncreate");
         register(MainActivity.class);
         setContentView(R.layout.activity_main);
+
         cameraTread = new CameraHandlerThread();
 
 
@@ -120,8 +144,27 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         imageViewLogo = findViewById(R.id.imageViewLogo);
 
         buttonBack.setOnClickListener(v -> {
-            //   closeStream(streamId); // Call method to close stream
-            //finish(); // Close the application
+            if (!switchProjektor.isChecked()) {
+                switchProjektor.setChecked(false);
+            }
+            switchSwiatlo.setChecked(false);
+            switchSzwendacz.setChecked(false);
+            switchAnimacjaZycia.setChecked(false);
+            switchPad.setChecked(false);
+            switchPolaczniePC.setChecked(false);
+            long currentTime = System.currentTimeMillis();
+            long timeElapsed = currentTime - lastSwitchTime;
+            long timeRemaining = 12000 - timeElapsed;
+            if (timeRemaining > 0) {
+                handler.postDelayed(() -> exitApplication(), timeRemaining);
+            } else {
+                exitApplication();
+            }
+            // Natychmiastowe wyłączenie projektora
+            if (projectorEnabled) {
+                projectorManager.switchProjector(false);
+                projectorEnabled = false;
+            }
             finishAffinity();
         });
 
@@ -136,8 +179,68 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
             }
         });
 
+
+
+        hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+        mediaDecoder = new VisionMediaDecoder();
+        mediaStreamManager = new MediaStreamManager(hdCameraManager, mediaDecoder);
+        sv= findViewById(R.id.surfaceViewCamera);
+        sv.getHolder().addCallback(this);
+
+        // openStream();
+     //   Log.d("testo", String.valueOf(savedInstanceState));
+     //   com.sanbot.opensdk.beans.OperationResult res = hardWareManager.queryWhiteLightBrightness();
+
+        switchSwiatlo.setChecked(lightOn);
+        switchProjektor.setChecked(projektorOn);
+        switchSzwendacz.setChecked(szwendaczOn);
+        switchAnimacjaZycia.setChecked(animacjaOn);
+        switchPolaczniePC.setChecked(polaczenieOn);
+        switchPad.setChecked(padOn);
+        startBatteryLevelChecker();
+
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build();
+        ConnectivityManager connectivity = getApplicationContext().getSystemService(ConnectivityManager.class);
+        connectivity.requestNetwork(request, new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                LinkProperties link = connectivity.getLinkProperties(network);
+                if (link != null) {
+                    List<LinkAddress> addresses = link.getLinkAddresses();
+                    for (LinkAddress address : addresses) {
+                        InetAddress ip = address.getAddress();
+                        if (ip instanceof Inet4Address) {
+                            TextView ipText = findViewById(R.id.wifi_text);
+                            ipText.setText(ip.toString());
+                        }
+                    }
+                }
+            }
+        });
+    }
+/*
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("testo", "reading state");
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("testo", "saving state");
+        outState.putBoolean("light", switchSwiatlo.isChecked());
+    }
+*/
+    protected  void onStart() {
+        super.onStart();
         switchProjektor.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchProjector(isChecked);
+            projektorOn = isChecked;
             if (!result.isSuccessful()) {
                 Toast.makeText(MainActivity.this, "Please wait 12 seconds before switching again.", Toast.LENGTH_SHORT).show();
                 switchProjektor.setOnCheckedChangeListener(null);
@@ -148,6 +251,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 
         switchSwiatlo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchWhiteLight(isChecked);
+            lightOn = isChecked; // ZMIENNA GLOBALNA!!! WEŹ TO POD UWAGĘ DLA POZOSTAŁYCH KOMPONENTÓW
             if (!result.isSuccessful()) {
                 Toast.makeText(MainActivity.this, "Failed to switch light.", Toast.LENGTH_SHORT).show();
                 switchSwiatlo.setOnCheckedChangeListener(null);
@@ -157,22 +261,17 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         });
         switchSzwendacz.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchWander(isChecked);
+            szwendaczOn = isChecked;
             if (!result.isSuccessful()) {
                 String errorMessage = getErrorMessage(result.getErrorCode());
                 Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 switchSzwendacz.setChecked(!isChecked); // Revert switch state
             }
         });
-
-        hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
-        mediaDecoder = new VisionMediaDecoder();
-        mediaStreamManager = new MediaStreamManager(hdCameraManager, mediaDecoder);
-        sv= findViewById(R.id.surfaceViewCamera);
-        sv.getHolder().addCallback(this);
-
-        // openStream();
     }
+    protected void onExit() {
 
+    }
     @Override
     protected void onMainServiceConnected() {
         SpeechManager sm = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
@@ -383,7 +482,30 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         }
     }
 
-    public OperationResult switchProjector(boolean isOpen) {
+    public OperationResult switchProjector(boolean isOpen)
+    {
+        long currentTime = System.currentTimeMillis();
+        long timeElapsed = currentTime - lastSwitchTime;
+        long waitTime = 12000 - timeElapsed;
+
+        if (isOpen) {
+            if (timeElapsed < 12000) {
+                return new OperationResult(false); // Nie pozwalaj na włączenie przed upływem 12 sekund
+            }
+            projectorEnabled = true;
+            lastSwitchTime = currentTime;
+            projectorManager.switchProjector(true);
+        } else {
+            if (timeElapsed < 12000) {
+                return new OperationResult(false); // Nie pozwalaj na wyłączenie przed upływem 12 sekund
+            }
+            projectorEnabled = false;
+            lastSwitchTime = currentTime;
+            projectorManager.switchProjector(false);
+        }
+        return new OperationResult(true);
+    }
+    /*{
         long currentTime = System.currentTimeMillis();
         if (isOpen) {
             projectorEnabled = true;
@@ -402,7 +524,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         }
         return new OperationResult(true);
     }
-
+    */
     public OperationResult switchWhiteLight(boolean isOpen) {
         if (isOpen) {
             hardWareManager.switchWhiteLight(true);
@@ -492,6 +614,13 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         if (handler != null && batteryCheckRunnable != null) {
             handler.removeCallbacks(batteryCheckRunnable);
         }
+    }
+    private void exitApplication() {
+        if (projectorEnabled) {
+            projectorManager.switchProjector(false);
+            projectorEnabled = false;
+        }
+        finishAffinity();
     }
 
 //    @Override
