@@ -1,6 +1,5 @@
 package com.example.polinav3.gamepad;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -8,8 +7,6 @@ import android.util.Log;
 import com.sanbot.opensdk.base.BindBaseService;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.beans.wheelmotion.NoAngleWheelMotion;
-import com.sanbot.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
-import com.sanbot.opensdk.function.unit.HandMotionManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 import com.sanbot.opensdk.function.unit.WingMotionManager;
 
@@ -20,6 +17,7 @@ public class GameControllerService extends BindBaseService {
     private WingMotionManager wings;
     private boolean running = true;
     private AtomicInteger lastAction = new AtomicInteger(-1);
+    private Thread thread;
     public GameControllerService() {
         Log.d("test", "creating service");
     }
@@ -49,9 +47,23 @@ public class GameControllerService extends BindBaseService {
         Log.d("test", "connecting service");
         wheels = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
         wings = (WingMotionManager) getUnitManager(FuncConstant.WINGMOTION_MANAGER);
+        if (thread != null) {
+            stopActivities();
+        }
+        startActivities();
         INSTANCE = this;
 
-        new Thread(this::roboLoop).start();
+    }
+
+    public void stopActivities() {
+        running = false;
+        thread.interrupt();
+    }
+
+    public void startActivities() {
+        running = true;
+        thread = new Thread(this::roboLoop);
+        thread.start();
     }
 
     private void roboLoop() {
@@ -65,7 +77,8 @@ public class GameControllerService extends BindBaseService {
             try {
                 Thread.sleep(2800);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Log.d("test", "game controller service interrupted");
+                break;
             }
         }
     }

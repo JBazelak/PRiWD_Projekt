@@ -1,5 +1,6 @@
 package com.example.polinav3;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.LinkAddress;
@@ -36,6 +37,8 @@ import com.example.polinav3.gamepad.ButtonInput;
 import com.example.polinav3.gamepad.ButtonType;
 import com.example.polinav3.gamepad.GameControllerService;
 import com.example.polinav3.gamepad.LocalGamepadConnector;
+import com.example.polinav3.gamepad.NetworkGamepadConnector;
+
 import com.example.polinav3.video.CameraHandlerThread;
 import com.example.polinav3.video.MediaStreamManager;
 import com.example.polinav3.video.VisionMediaDecoder;
@@ -50,6 +53,7 @@ import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -102,7 +106,9 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
     private Runnable delayedProjectorOffRunnable;
     private int streamId;
     private LocalGamepadConnector localGamepadConnector = new LocalGamepadConnector();
+    private NetworkGamepadConnector networkConnector = new NetworkGamepadConnector();
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,15 +175,14 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         });
 
         startService(new Intent(this, GameControllerService.class));
-        localGamepadConnector.addListener(b -> {
-            if (GameControllerService.INSTANCE != null) {
-                if (b.button == ButtonType.LStick) {
-                    GameControllerService.INSTANCE.move(b.ax, -b.ay);
-                } else if (b.button == ButtonType.A) {
-                    GameControllerService.INSTANCE.stop();
-                }
-            }
-        });
+        localGamepadConnector.addListener(this::sendInputToService);
+        try {
+            networkConnector.start();
+            networkConnector.addListener(this::sendInputToService);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
 
 
@@ -281,6 +286,19 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         ArrayList<Integer> list = getGameControllerIds();
         Log.d("controllers_amount", String.valueOf(list.size()));
 
+    }
+
+    private void sendInputToService(ButtonInput input) {
+        Log.d("net", "sending input to service");
+        if (GameControllerService.INSTANCE != null) {
+            if (input.button == ButtonType.LStick) {
+                Log.d("net", "moving");
+                GameControllerService.INSTANCE.move(input.ax, -input.ay);
+            } else if (input.button == ButtonType.A) {
+                Log.d("net", "stopping");
+                GameControllerService.INSTANCE.stop();
+            }
+        }
     }
 
 

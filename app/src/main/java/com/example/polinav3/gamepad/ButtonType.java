@@ -8,4 +8,13 @@ public enum ButtonType {
     }
 
     public final int id;
+
+    public static ButtonType byId(int id) {
+        for (ButtonType button : ButtonType.values()) {
+            if (button.id == id) {
+                return button;
+            }
+        }
+        return null;
+    }
 }
