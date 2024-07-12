@@ -4,4 +4,8 @@
     <string name="button_test2">Shake hands</string>
     <string name="button_test3">Shake head</string>
     <string name="button_test4">Time to twirl</string>
+    <string name="takeAPhoto">Zrób zdjęcie</string>
+    <string name="age">Wiek</string>
+    <string name="sex">Płeć</string>
+    <string name="emotion">Emocje</string>
 </resources>

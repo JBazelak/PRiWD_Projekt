@@ -45,6 +45,7 @@
         android:contentDescription="Enter How Much Cookies You Want"
         android:src="@drawable/return_arrow" />
 
+
     <TableLayout
         android:id="@+id/tableLayout"
         android:layout_width="wrap_content"
@@ -52,6 +53,17 @@
         android:layout_below="@id/buttonBack"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/wifi_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
 
         <TableRow>
 
@@ -166,7 +178,7 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="331dp"
         android:layout_height="543dp"
-        android:layout_marginStart="190dp"
+        android:layout_marginStart="125dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@+id/tableLayout"
         android:contentDescription="Logo of the application"
@@ -183,31 +195,15 @@
         android:text="Stan baterii 30%"
         android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/viewCamera"
-        android:layout_width="435dp"
-        android:layout_height="320dp"
+    <SurfaceView
+        android:id="@+id/surfaceViewCamera"
+        android:layout_width="520dp"
+        android:layout_height="615dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
-        android:layout_marginEnd="20dp"
-        android:background="#D3D3D3"
-        android:contentDescription="Camera" />
-
-    <View
-        android:id="@+id/viewKonsola"
-        android:layout_width="435dp"
-        android:layout_height="320dp"
-        android:layout_below="@+id/viewCamera"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="42dp"
-        android:background="#FFFFFF"
-        android:contentDescription="Konsola (na PC okno rozwijane)" />
+        android:layout_marginEnd="20dp" />
 
     <!-- <ProgressBar
          android:id="@+id/progressBarBattery"

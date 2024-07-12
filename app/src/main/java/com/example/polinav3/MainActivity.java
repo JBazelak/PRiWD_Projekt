@@ -2,30 +2,50 @@ package com.example.polinav3;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 
+import com.example.polinav3.AI_prediction.Recognition;
 import com.example.polinav3.gamepad.ButtonInput;
 import com.example.polinav3.gamepad.ButtonType;
 import com.example.polinav3.gamepad.GameControllerService;
 import com.example.polinav3.gamepad.LocalGamepadConnector;
 import com.example.polinav3.gamepad.NetworkGamepadConnector;
+
+import com.example.polinav3.video.CameraHandlerThread;
+import com.example.polinav3.video.MediaStreamManager;
+import com.example.polinav3.video.VisionMediaDecoder;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.ErrorCode;
 import com.sanbot.opensdk.beans.FuncConstant;
-import com.sanbot.opensdk.function.beans.StreamOption;
+import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.unit.HDCameraManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.ModularMotionManager;
@@ -34,11 +54,12 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends TopBaseActivity {
-    private Button buttonPodazanie;
+public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callback {
     private Button buttonRozmowa;
     private Button buttonRozpoznawanie;
     private ImageButton buttonBack;
@@ -49,24 +70,40 @@ public class MainActivity extends TopBaseActivity {
     private Switch switchPolaczniePC;
     private Switch switchSzwendacz;
     private TextView textViewBatteryStatus;
-    private ProgressBar progressBarBattery;
     private ImageView imageViewLogo;
 
-    private ImageView viewCamera;
     private Runnable batteryCheckRunnable;
     private List<Integer> handleList = new ArrayList<>();
 
 
     ProjectorManager projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
     HardWareManager hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-    HDCameraManager hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+
+    //Camera
+    private HDCameraManager hdCameraManager;
+    private MediaStreamManager mediaStreamManager;
+    private SurfaceView sv;
+    private VisionMediaDecoder mediaDecoder;
+    private CameraHandlerThread cameraTread;
 
     ModularMotionManager modularMotionManager = (ModularMotionManager) getUnitManager(FuncConstant.MODULARMOTION_MANAGER);
 
     SystemManager systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
     private boolean projectorEnabled = false;
+    private static boolean lightOn = false;
+    private static boolean projektorOn = false;
+    private static boolean animacjaOn = false;
+    private static boolean padOn = false;
+    private static boolean polaczenieOn = false;
+    private static boolean szwendaczOn = false;
     private long lastSwitchTime = 0;
     private Handler handler = new Handler();
+
+    public HardWareManager getHardWareManager() {
+        return hardWareManager;
+    }
+
+    private Runnable delayedProjectorOffRunnable;
     private int streamId;
     private LocalGamepadConnector localGamepadConnector = new LocalGamepadConnector();
     private NetworkGamepadConnector networkConnector = new NetworkGamepadConnector();
@@ -75,8 +112,12 @@ public class MainActivity extends TopBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // Log.d("testo", "oncreate");
         register(MainActivity.class);
         setContentView(R.layout.activity_main);
+
+        cameraTread = new CameraHandlerThread();
+
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -84,9 +125,20 @@ public class MainActivity extends TopBaseActivity {
 //            return insets;
 //        });
 
-
         buttonRozmowa = findViewById(R.id.buttonRozmowa);
+        buttonRozmowa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
         buttonRozpoznawanie = findViewById(R.id.buttonRozpoznawanie);
+        buttonRozpoznawanie.setOnClickListener(v -> {
+            mediaStreamManager.closeStream(sv.getHolder().getSurface());
+            Intent intent = new Intent(MainActivity.this, Recognition.class);
+            startActivity(intent);
+        });
         buttonBack = findViewById(R.id.buttonBack);
         switchProjektor = findViewById(R.id.switchProjektor);
         switchSwiatlo = findViewById(R.id.switchSwiatlo);
@@ -96,11 +148,30 @@ public class MainActivity extends TopBaseActivity {
         textViewBatteryStatus = findViewById(R.id.textViewBatteryStatus);
         switchSzwendacz = findViewById(R.id.switchSzwendacz);
         imageViewLogo = findViewById(R.id.imageViewLogo);
-        viewCamera = findViewById(R.id.viewCamera);
 
         buttonBack.setOnClickListener(v -> {
-            //   closeStream(streamId); // Call method to close stream
-            finish(); // Close the application
+            if (!switchProjektor.isChecked()) {
+                switchProjektor.setChecked(false);
+            }
+            switchSwiatlo.setChecked(false);
+            switchSzwendacz.setChecked(false);
+            switchAnimacjaZycia.setChecked(false);
+            switchPad.setChecked(false);
+            switchPolaczniePC.setChecked(false);
+            long currentTime = System.currentTimeMillis();
+            long timeElapsed = currentTime - lastSwitchTime;
+            long timeRemaining = 12000 - timeElapsed;
+            if (timeRemaining > 0) {
+                handler.postDelayed(() -> exitApplication(), timeRemaining);
+            } else {
+                exitApplication();
+            }
+            // Natychmiastowe wyłączenie projektora
+            if (projectorEnabled) {
+                projectorManager.switchProjector(false);
+                projectorEnabled = false;
+            }
+            finishAffinity();
         });
 
         startService(new Intent(this, GameControllerService.class));
@@ -113,8 +184,68 @@ public class MainActivity extends TopBaseActivity {
         }
 
 
+
+
+        hdCameraManager = (HDCameraManager) getUnitManager(FuncConstant.HDCAMERA_MANAGER);
+        mediaDecoder = new VisionMediaDecoder();
+        mediaStreamManager = new MediaStreamManager(hdCameraManager, mediaDecoder);
+        sv= findViewById(R.id.surfaceViewCamera);
+        sv.getHolder().addCallback(this);
+
+        // openStream();
+     //   Log.d("testo", String.valueOf(savedInstanceState));
+     //   com.sanbot.opensdk.beans.OperationResult res = hardWareManager.queryWhiteLightBrightness();
+
+        switchSwiatlo.setChecked(lightOn);
+        switchProjektor.setChecked(projektorOn);
+        switchSzwendacz.setChecked(szwendaczOn);
+        switchAnimacjaZycia.setChecked(animacjaOn);
+        switchPolaczniePC.setChecked(polaczenieOn);
+        switchPad.setChecked(padOn);
+        startBatteryLevelChecker();
+
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build();
+        ConnectivityManager connectivity = getApplicationContext().getSystemService(ConnectivityManager.class);
+        connectivity.requestNetwork(request, new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                LinkProperties link = connectivity.getLinkProperties(network);
+                if (link != null) {
+                    List<LinkAddress> addresses = link.getLinkAddresses();
+                    for (LinkAddress address : addresses) {
+                        InetAddress ip = address.getAddress();
+                        if (ip instanceof Inet4Address) {
+                            TextView ipText = findViewById(R.id.wifi_text);
+                            ipText.setText(ip.toString());
+                        }
+                    }
+                }
+            }
+        });
+    }
+/*
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("testo", "reading state");
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("testo", "saving state");
+        outState.putBoolean("light", switchSwiatlo.isChecked());
+    }
+*/
+    protected  void onStart() {
+        super.onStart();
         switchProjektor.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchProjector(isChecked);
+            projektorOn = isChecked;
             if (!result.isSuccessful()) {
                 Toast.makeText(MainActivity.this, "Please wait 12 seconds before switching again.", Toast.LENGTH_SHORT).show();
                 switchProjektor.setOnCheckedChangeListener(null);
@@ -125,6 +256,7 @@ public class MainActivity extends TopBaseActivity {
 
         switchSwiatlo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchWhiteLight(isChecked);
+            lightOn = isChecked; // ZMIENNA GLOBALNA!!! WEŹ TO POD UWAGĘ DLA POZOSTAŁYCH KOMPONENTÓW
             if (!result.isSuccessful()) {
                 Toast.makeText(MainActivity.this, "Failed to switch light.", Toast.LENGTH_SHORT).show();
                 switchSwiatlo.setOnCheckedChangeListener(null);
@@ -134,15 +266,17 @@ public class MainActivity extends TopBaseActivity {
         });
         switchSzwendacz.setOnCheckedChangeListener((buttonView, isChecked) -> {
             OperationResult result = switchWander(isChecked);
+            szwendaczOn = isChecked;
             if (!result.isSuccessful()) {
                 String errorMessage = getErrorMessage(result.getErrorCode());
                 Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 switchSzwendacz.setChecked(!isChecked); // Revert switch state
             }
         });
-        // openStream();
     }
+    protected void onExit() {
 
+    }
     @Override
     protected void onMainServiceConnected() {
         SpeechManager sm = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
@@ -204,6 +338,11 @@ public class MainActivity extends TopBaseActivity {
 //                return super.onKeyDown(event.getKeyCode(), event);
         }
         return super.onKeyDown(event.getKeyCode(), event);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 
     @Override
@@ -361,7 +500,30 @@ public class MainActivity extends TopBaseActivity {
         }
     }
 
-    public OperationResult switchProjector(boolean isOpen) {
+    public OperationResult switchProjector(boolean isOpen)
+    {
+        long currentTime = System.currentTimeMillis();
+        long timeElapsed = currentTime - lastSwitchTime;
+        long waitTime = 12000 - timeElapsed;
+
+        if (isOpen) {
+            if (timeElapsed < 12000) {
+                return new OperationResult(false); // Nie pozwalaj na włączenie przed upływem 12 sekund
+            }
+            projectorEnabled = true;
+            lastSwitchTime = currentTime;
+            projectorManager.switchProjector(true);
+        } else {
+            if (timeElapsed < 12000) {
+                return new OperationResult(false); // Nie pozwalaj na wyłączenie przed upływem 12 sekund
+            }
+            projectorEnabled = false;
+            lastSwitchTime = currentTime;
+            projectorManager.switchProjector(false);
+        }
+        return new OperationResult(true);
+    }
+    /*{
         long currentTime = System.currentTimeMillis();
         if (isOpen) {
             projectorEnabled = true;
@@ -380,7 +542,7 @@ public class MainActivity extends TopBaseActivity {
         }
         return new OperationResult(true);
     }
-
+    */
     public OperationResult switchWhiteLight(boolean isOpen) {
         if (isOpen) {
             hardWareManager.switchWhiteLight(true);
@@ -400,23 +562,28 @@ public class MainActivity extends TopBaseActivity {
         return new OperationResult(true);
     }
 
-    public OperationResult openStream(StreamOption streamOption) {
-        streamOption.setChannel(StreamOption.MAIN_STREAM);
-        streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
-        streamOption.setJustIframe(false);
-
-        // Wywołanie metody openStream z hdCameraManager
-        hdCameraManager.openStream(streamOption);
-        return new OperationResult(true);
+    private void startCamera(Surface surface) {
+        cameraTread.postTask(() -> mediaStreamManager.openStream(surface));
     }
 
-    public OperationResult closeStream(int handle) {
-        hdCameraManager.closeStream(handle);
-        return new OperationResult(true);
+
+    private void closeCamera (Surface surface){
+        cameraTread.postTask(() -> mediaStreamManager.closeStream(surface));
     }
-    public interface MediaListener {
-        void getVideoStream(byte[] data);
-        void getAudioStream(byte[] data);
+
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        startCamera(holder.getSurface());
+    }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        mediaStreamManager.changeSurface(holder.getSurface(), format, width, height);
+    }
+
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+        closeCamera(holder.getSurface());
     }
 
     // Define OperationResult class
@@ -466,4 +633,28 @@ public class MainActivity extends TopBaseActivity {
             handler.removeCallbacks(batteryCheckRunnable);
         }
     }
+    private void exitApplication() {
+        if (projectorEnabled) {
+            projectorManager.switchProjector(false);
+            projectorEnabled = false;
+        }
+        finishAffinity();
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mediaStreamManager.openStream(sv.getHolder().getSurface());
+//    }
+
+
+ //   @Override
+//    protected void onPause() {
+//        super.onPause();
+//        try {
+//            cameraTread.wait();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
