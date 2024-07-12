@@ -108,6 +108,9 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
     private LocalGamepadConnector localGamepadConnector = new LocalGamepadConnector();
     private NetworkGamepadConnector networkConnector = new NetworkGamepadConnector();
 
+
+    private Intent controllerIntent;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,8 +176,9 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
             }
             finishAffinity();
         });
-
-        startService(new Intent(this, GameControllerService.class));
+        //do switcha idzie
+//        controllerIntent = new Intent(this, GameControllerService.class);
+//        startService(controllerIntent);
         localGamepadConnector.addListener(this::sendInputToService);
         try {
             networkConnector.start();
@@ -273,9 +277,29 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
                 switchSzwendacz.setChecked(!isChecked); // Revert switch state
             }
         });
-    }
-    protected void onExit() {
 
+        switchPad.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
+            // "result" dla pada
+         //   result = onMainServiceConnected();
+                    padOn = isChecked;
+                    if(isChecked == false){
+                        try{
+                            stopService(controllerIntent);
+                        }
+                        catch (Exception e){
+                            System.out.println(e);
+                        }
+                        finally{
+                            controllerIntent=null;
+                        }
+                    }
+                    else{
+                        controllerIntent = new Intent(this, GameControllerService.class);
+                        startService(controllerIntent);
+                    }
+                    Log.d("nep", String.valueOf(isChecked));
+        });
     }
     @Override
     protected void onMainServiceConnected() {
@@ -308,6 +332,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
     }
     @Override
     public  boolean dispatchKeyEvent(KeyEvent event) {
+//        Log.d("nep", String.valueOf(event.getKeyCode()));
         switch(event.getKeyCode()) {
             case KeyEvent.KEYCODE_BUTTON_L1:
                 localGamepadConnector.Emit(new ButtonInput(ButtonType.LB,0,0));break;
@@ -498,6 +523,15 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
                 buttonView.setOnCheckedChangeListener(this::onCheckedChanged);
             }
         }
+        else if (buttonView.getId() == R.id.switchPad) {
+//            OperationResult result = handlePadSwitch(isChecked);;
+//            if (!result.isSuccessful()) {
+//                Toast.makeText(MainActivity.this, "Failed to connect pad.", Toast.LENGTH_SHORT).show();
+//                buttonView.setOnCheckedChangeListener(null);
+//                buttonView.setChecked(!isChecked);
+//                buttonView.setOnCheckedChangeListener(this::onCheckedChanged);
+//            }
+        }
     }
 
     public OperationResult switchProjector(boolean isOpen)
@@ -543,6 +577,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         return new OperationResult(true);
     }
     */
+
     public OperationResult switchWhiteLight(boolean isOpen) {
         if (isOpen) {
             hardWareManager.switchWhiteLight(true);
@@ -561,6 +596,8 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
         }
         return new OperationResult(true);
     }
+
+
 
     private void startCamera(Surface surface) {
         cameraTread.postTask(() -> mediaStreamManager.openStream(surface));
@@ -657,4 +694,7 @@ public class MainActivity extends TopBaseActivity implements SurfaceHolder.Callb
 //            throw new RuntimeException(e);
 //        }
 //    }
+
+
+
 }
