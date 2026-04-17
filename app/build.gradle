@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'com.example.polinav3'
+    namespace 'com.example.polinav3_SGB'
     //noinspection GradleDependency
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.polinav3"
+        applicationId "com.example.polinav3_SGB"
         minSdk 23
         //noinspection ExpiredTargetSdkVersion
         targetSdk 31
@@ -28,6 +28,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+//    task cleanAppleDoubleFiles(type: Exec) {
+//        description = 'Cleans AppleDouble files (._*) from the project directory before building.'
+//        commandLine 'dot_clean', '.'
+//    }
+
+//    preBuild.dependsOn cleanAppleDoubleFiles
 }
 
 dependencies {
@@ -44,3 +51,4 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 }
+

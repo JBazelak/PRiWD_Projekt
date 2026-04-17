@@ -1,4 +1,4 @@
-package com.example.polinav3;
+package com.example.polinav3_SGB;
 
 import org.junit.Test;
 
