@@ -7,4 +7,31 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/buttonToTest"
+        android:layout_width="148dp"
+        android:layout_height="89dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="158dp"
+        android:layout_marginEnd="476dp"
+        android:layout_marginBottom="162dp"
+        android:text="DoSomeTests" />
+
+    <Button
+        android:id="@+id/buttonToGame"
+        android:layout_width="wrap_content"
+        android:layout_height="86dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="428dp"
+        android:layout_marginTop="162dp"
+        android:layout_marginEnd="153dp"
+        android:layout_marginBottom="163dp"
+        android:text="PlayAGame" />
 </RelativeLayout>
