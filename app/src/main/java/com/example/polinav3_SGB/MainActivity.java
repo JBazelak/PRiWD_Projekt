@@ -32,8 +32,8 @@ public class MainActivity extends TopBaseActivity{
         goToGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testIntent.setClass(MainActivity.this, GameActivity.class);
-                startActivity(testIntent);
+                gameIntent.setClass(MainActivity.this, GameActivity.class);
+                startActivity(gameIntent);
             }
         });
     }
