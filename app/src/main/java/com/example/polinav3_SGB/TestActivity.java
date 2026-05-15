@@ -12,6 +12,7 @@ import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
+import com.sanbot.opensdk.base.TopBaseActivity;
 
 public class TestActivity extends TopBaseActivity{
 
@@ -40,6 +41,8 @@ public class TestActivity extends TopBaseActivity{
                 systemManager.showEmotion(EmotionsType.SNICKER);
                 hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_GREEN));
                 hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_GREEN));
+                hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_GREEN));
+                hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_GREEN));
                 speechManager.startSpeak("Aha! Wygrałem!");
             }
         });
@@ -50,6 +53,8 @@ public class TestActivity extends TopBaseActivity{
                 systemManager.showEmotion(EmotionsType.QUESTION);
                 hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_YELLOW));
                 hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_YELLOW));
+                hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_YELLOW));
+                hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_YELLOW));
                 speechManager.startSpeak("Remis!");
             }
         });
@@ -60,6 +65,8 @@ public class TestActivity extends TopBaseActivity{
                 systemManager.showEmotion(EmotionsType.ABUSE);
                 hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_RED));
                 hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_RED));
+                hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_RED));
+                hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_RED));
                 speechManager.startSpeak("O nie! Przegrałem!");
             }
         });
