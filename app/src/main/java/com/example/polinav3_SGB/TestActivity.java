@@ -14,6 +14,9 @@ import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.base.TopBaseActivity;
 
+import com.sanbot.opensdk.base.TopBaseActivity;
+
+
 public class TestActivity extends TopBaseActivity{
 
     private SystemManager systemManager;
@@ -28,7 +31,7 @@ public class TestActivity extends TopBaseActivity{
 
         Button robotWon = findViewById(R.id.buttonWon);
         Button aDraw = findViewById(R.id.buttonDrew);
-        Button robotLost = findViewById((R.id.buttonLost));
+        Button robotLost = findViewById(R.id.buttonLost);
 
         systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
         hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
