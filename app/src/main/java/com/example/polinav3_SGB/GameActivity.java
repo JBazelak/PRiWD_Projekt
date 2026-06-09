@@ -29,8 +29,8 @@ public class GameActivity extends TopBaseActivity{
 
     private HDCameraManager hdCameraManager;
     private int streamHandle = -1;
-
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    StringBuilder stringBuilder = new StringBuilder();
 
 
     @Override
@@ -53,6 +53,15 @@ public class GameActivity extends TopBaseActivity{
                                 throw new RuntimeException(e);
                             }
                         }
+                        stringBuilder.append("{"+"images"+":[");
+                        for(int i = 0; i<images.size(); i++){
+                            stringBuilder.append(images.get(i));
+                            if (i < images.size() - 1) {
+                                stringBuilder.append(",");
+                            }
+                        }
+                        stringBuilder.append("]}");
+
                     }
                 });
 
