@@ -6,11 +6,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
+import com.sanbot.opensdk.function.unit.HardWareManager;
 
 public class MainActivity extends TopBaseActivity{
 
     Intent testIntent = new Intent();
     Intent gameIntent = new Intent();
+
+    public HardWareManager hardWareManager;
+    public boolean isFlashlightOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +24,7 @@ public class MainActivity extends TopBaseActivity{
 
         Button goToTest = findViewById(R.id.buttonToTest);
         Button goToGame = findViewById(R.id.buttonToGame);
+        Button switchFlashlight = findViewById(R.id.buttonFlashlight);
 
         goToTest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +41,21 @@ public class MainActivity extends TopBaseActivity{
                 startActivity(gameIntent);
             }
         });
+
+//        switchFlashlight.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isFlashlightOn) {
+////                    hardWareManager.switchWhiteLight(false);
+//                    isFlashlightOn = false;
+//                    System.out.println("flsh is off");
+//                } else {
+////                    hardWareManager.switchWhiteLight(true);
+//                    isFlashlightOn = true;
+//                    System.out.println("Flashlight is on");
+//                }
+//            }
+//        });
     }
 
     @Override

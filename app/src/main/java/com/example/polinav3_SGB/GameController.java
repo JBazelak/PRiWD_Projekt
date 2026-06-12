@@ -1,6 +1,7 @@
 package com.example.polinav3_SGB;
 
 public class GameController {
+
     private enum RobotState{
         ROCK,
         PAPER,
@@ -84,5 +85,7 @@ public class GameController {
         }
 
     }
+
+
 
 }
