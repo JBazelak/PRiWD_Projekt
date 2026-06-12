@@ -1,0 +1,95 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"#1B28A6\"\r\n    tools:context=\".MainActivity\">\r\n\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonToTest\"\r\n        android:layout_width=\"148dp\"\r\n        android:layout_height=\"89dp\"\r\n        android:layout_alignParentStart=\"true\"\r\n        android:layout_alignParentTop=\"true\"\r\n        android:layout_alignParentEnd=\"true\"\r\n        android:layout_alignParentBottom=\"true\"\r\n        android:layout_marginStart=\"106dp\"\r\n        android:layout_marginTop=\"158dp\"\r\n        android:layout_marginEnd=\"476dp\"\r\n        android:layout_marginBottom=\"162dp\"\r\n        android:text=\"DoSomeTests\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonToGame\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"86dp\"\r\n        android:layout_alignParentStart=\"true\"\r\n        android:layout_alignParentTop=\"true\"\r\n        android:layout_alignParentEnd=\"true\"\r\n        android:layout_alignParentBottom=\"true\"\r\n        android:layout_marginStart=\"428dp\"\r\n        android:layout_marginTop=\"162dp\"\r\n        android:layout_marginEnd=\"153dp\"\r\n        android:layout_marginBottom=\"163dp\"\r\n        android:text=\"PlayAGame\" />\r\n</RelativeLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 75a7181cda6da143eacf3257b75163d1d254188e)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1778826721068)
+@@ -34,4 +34,18 @@
+         android:layout_marginEnd="153dp"
+         android:layout_marginBottom="163dp"
+         android:text="PlayAGame" />
++
++    <Button
++        android:id="@+id/lightChangeButton"
++        android:layout_width="139dp"
++        android:layout_height="69dp"
++        android:layout_alignParentStart="true"
++        android:layout_alignParentTop="true"
++        android:layout_alignParentEnd="true"
++        android:layout_alignParentBottom="true"
++        android:layout_marginStart="111dp"
++        android:layout_marginTop="283dp"
++        android:layout_marginEnd="481dp"
++        android:layout_marginBottom="59dp"
++        android:text="Change Light" />
+ </RelativeLayout>
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\n#noinspection AndroidGradlePluginVersion\r\nagp = \"8.3.0\"\r\nappcompatV7 = \"28.0.0\"\r\n#noinspection GradleDependency\r\ngson = \"2.10\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.1.5\"\r\nespressoCore = \"3.5.1\"\r\n#noinspection GradleDependency\r\nappcompat = \"1.2.0\"\r\n#noinspection GradleDependency\r\nmaterial = \"1.6.1\"\r\nconstraintlayout = \"2.1.4\"\r\nactivity = \"1.9.0\"\r\nannotation = \"1.2.0\"\r\n\r\n[libraries]\r\nappcompat-v7 = { module = \"com.android.support:appcompat-v7\", version.ref = \"appcompatV7\" }\r\ngson = { module = \"com.google.code.gson:gson\", version.ref = \"gson\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\next-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nespresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nappcompat = { group = \"androidx.appcompat\", name = \"appcompat\", version.ref = \"appcompat\" }\r\nmaterial = { group = \"com.google.android.material\", name = \"material\", version.ref = \"material\" }\r\nconstraintlayout = { group = \"androidx.constraintlayout\", name = \"constraintlayout\", version.ref = \"constraintlayout\" }\r\nactivity = { group = \"androidx.activity\", name = \"activity\", version = \"1.3.0\" }\r\n[plugins]\r\nandroidApplication = { id = \"com.android.application\", version.ref = \"agp\" }\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision 75a7181cda6da143eacf3257b75163d1d254188e)
++++ b/gradle/libs.versions.toml	(date 1778826228968)
+@@ -1,6 +1,6 @@
+ [versions]
+ #noinspection AndroidGradlePluginVersion
+-agp = "8.3.0"
++agp = "8.4.0"
+ appcompatV7 = "28.0.0"
+ #noinspection GradleDependency
+ gson = "2.10"
+Index: app/src/main/res/layout/activity_light_managment.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_light_managment.xml b/app/src/main/res/layout/activity_light_managment.xml
+new file mode 100644
+--- /dev/null	(date 1778827143388)
++++ b/app/src/main/res/layout/activity_light_managment.xml	(date 1778827143388)
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <Button
++        android:id="@+id/backToMainScreenButton"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Wróć"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="0.024"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintVertical_bias="0.955" />
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Thu May 09 08:58:35 CEST 2024\r\ndistributionBase=GRADLE_USER_HOME\r\ndistributionPath=wrapper/dists\r\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.4-bin.zip\r\nzipStoreBase=GRADLE_USER_HOME\r\nzipStorePath=wrapper/dists\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+--- a/gradle/wrapper/gradle-wrapper.properties	(revision 75a7181cda6da143eacf3257b75163d1d254188e)
++++ b/gradle/wrapper/gradle-wrapper.properties	(date 1778826229003)
+@@ -1,6 +1,6 @@
+ #Thu May 09 08:58:35 CEST 2024
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-8.4-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-8.6-bin.zip
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
