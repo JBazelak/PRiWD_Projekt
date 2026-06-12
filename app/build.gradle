@@ -38,7 +38,6 @@ android {
 }
 
 dependencies {
-
     implementation libs.appcompat
     implementation libs.material
     implementation libs.constraintlayout
@@ -47,8 +46,12 @@ dependencies {
     implementation libs.gson
     implementation libs.activity
     implementation 'androidx.annotation:annotation:1.2.0'
+    implementation libs.firebase.dataconnect
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // ZMIENIONA LINIJKA - Wersja 3.12.13 nie używa Kotlina, więc nie wywoła konfliktu z SDK SanBota
+    implementation 'com.squareup.okhttp3:okhttp:3.12.13'
 }
 
