@@ -2,16 +2,22 @@ package com.example.polinav3_SGB;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.beans.OperationResult;
+import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.FaceRecognizeBean;
+import com.sanbot.opensdk.function.beans.LED;
 import com.sanbot.opensdk.function.unit.HDCameraManager;
 import com.sanbot.opensdk.function.beans.StreamOption;
+import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.MediaManager;
+import com.sanbot.opensdk.function.unit.SpeechManager;
+import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.interfaces.media.FaceRecognizeListener;
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +32,9 @@ public class GameActivity extends TopBaseActivity{
     Button playGameButton = findViewById(R.id.playGameButton);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private HDCameraManager hdCameraManager;
+    private SystemManager systemManager;
+    private HardWareManager hardWareManager;
+    private SpeechManager speechManager;
     private int streamHandle = -1;
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     StringBuilder stringBuilder = new StringBuilder();
@@ -51,18 +60,25 @@ public class GameActivity extends TopBaseActivity{
                                 throw new RuntimeException(e);
                             }
                         }
-                        stringBuilder.append("{"+"images"+":[");
-                        for(int i = 0; i<images.size(); i++){
-                            stringBuilder.append(images.get(i));
-                            if (i < images.size() - 1) {
-                                stringBuilder.append(",");
+                        KlientApi klientApi = new KlientApi();
+                        klientApi.sendFramesAndPlay(images, new KlientApi.GameCallback(){
+                            @Override
+                            public void onResult(String playerGesture, String robotGesture, String result) {
+                                String message = "TY: " + playerGesture + " | ROBOT: " + robotGesture + " -> " + result;
+                                Log.d("SanBot", "WYNIK SYMULACJI: " + message);
+                                getRobotReaction(result);
                             }
-                        }
-                        stringBuilder.append("]}");
+
+                            @Override
+                            public void onError(String errMessage) {
+                                Log.e("SanBot", "BŁĄD SYMULACJI: " + errMessage);
+                                speechManager.startSpeak(errMessage);
+                            }
+
+                        });
 
                     }
                 });
-
 
             }
         });
@@ -102,6 +118,33 @@ public class GameActivity extends TopBaseActivity{
             }
         }
         return null; // Nie udało się pobrać klatki
+    }
+
+    public void getRobotReaction(String result){
+        if (result.equals("robot_wins")){
+            systemManager.showEmotion(EmotionsType.SNICKER);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_GREEN));
+            speechManager.startSpeak("Aha! Wygrałem!");
+        }
+        else if (result.equals("draw")){
+            systemManager.showEmotion(EmotionsType.QUESTION);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_YELLOW));
+            speechManager.startSpeak("Remis!");
+        }
+        else if (result.equals("player_wins")){
+            systemManager.showEmotion(EmotionsType.ABUSE);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_RED));
+            speechManager.startSpeak("O nie! Przegrałem!");
+        }
     }
 
     @Override
