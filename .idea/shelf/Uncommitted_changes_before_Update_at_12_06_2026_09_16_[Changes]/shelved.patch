@@ -1,0 +1,360 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <uses-feature\r\n        android:name=\"android.hardware.camera\"\r\n        android:required=\"false\" />\r\n\r\n    <uses-permission android:name=\"android.permission.CAMERA\" />\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\r\n    <uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Polinav3\"\r\n        tools:targetApi=\"31\">\r\n        <activity\r\n            android:name=\".GameActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".TestActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".AI_prediction.Recognition\"\r\n            android:exported=\"false\" />\r\n\r\n        <service\r\n            android:name=\".gamepad.GameControllerService\"\r\n            android:enabled=\"true\"\r\n            android:exported=\"true\" />\r\n\r\n        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\">\r\n            <meta-data\r\n                android:name=\"RECOGNIZE_MODE\"\r\n                android:value=\"1\" />\r\n            <meta-data\r\n                android:name=\"FORBID_TOUCH\"\r\n                android:value=\"true\" />\r\n\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity\r\n            android:name=\".ChatActivity\"\r\n            android:exported=\"true\"\r\n            android:theme=\"@style/Theme.Polinav3\" />\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 0a058b958b7962c68288ab225e9f3e019041b71b)
++++ b/app/src/main/AndroidManifest.xml	(date 1780778941977)
+@@ -11,6 +11,7 @@
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
++    <uses-permission android:name="android.permission.INTERNET" />
+ 
+     <application
+         android:allowBackup="true"
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Default ignored files\r\n/shelf/\r\n/workspace.xml\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+--- a/.idea/.gitignore	(revision 0a058b958b7962c68288ab225e9f3e019041b71b)
++++ b/.idea/.gitignore	(date 1780684987416)
+@@ -1,3 +1,17 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
++*.iml
++.gradle
++/local.properties
++/.idea/caches
++/.idea/libraries
++/.idea/modules.xml
++/.idea/workspace.xml
++/.idea/navEditor.xml
++/.idea/assetWizardSettings.xml
++.DS_Store
++/build
++/captures
++.externalNativeBuild
++.cxx
++local.properties
++/.idea/.name
++/.idea/deploymentTargetSelector.xml
+\ No newline at end of file
+Index: app/src/main/java/com/example/polinav3_SGB/TestActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.polinav3_SGB;\r\n\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\n\r\nimport com.sanbot.opensdk.base.TopBaseActivity;\r\nimport com.sanbot.opensdk.beans.FuncConstant;\r\nimport com.sanbot.opensdk.function.beans.EmotionsType;\r\nimport com.sanbot.opensdk.function.beans.LED;\r\nimport com.sanbot.opensdk.beans.OperationResult;\r\nimport com.sanbot.opensdk.function.unit.SpeechManager;\r\nimport com.sanbot.opensdk.function.unit.SystemManager;\r\nimport com.sanbot.opensdk.function.unit.HardWareManager;\r\n\r\nimport com.sanbot.opensdk.base.TopBaseActivity;\r\n\r\n\r\npublic class TestActivity extends TopBaseActivity{\r\n\r\n    private SystemManager systemManager;\r\n    private HardWareManager hardWareManager;\r\n    private SpeechManager speechManager;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        register(MainActivity.class);\r\n        setContentView(R.layout.activity_test);\r\n\r\n        Button robotWon = findViewById(R.id.buttonWon);\r\n        Button aDraw = findViewById(R.id.buttonDrew);\r\n        Button robotLost = findViewById(R.id.buttonLost);\r\n\r\n        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);\r\n        hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);\r\n        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);\r\n\r\n\r\n        robotWon.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                systemManager.showEmotion(EmotionsType.SNICKER);\r\n                hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_GREEN));\r\n                hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_GREEN));\r\n                speechManager.startSpeak(\"Aha! Wygrałem!\");\r\n            }\r\n        });\r\n\r\n        aDraw.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                systemManager.showEmotion(EmotionsType.QUESTION);\r\n                hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_YELLOW));\r\n                hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_YELLOW));\r\n                speechManager.startSpeak(\"Remis!\");\r\n            }\r\n        });\r\n\r\n        robotLost.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                systemManager.showEmotion(EmotionsType.ABUSE);\r\n                hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_RED));\r\n                hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_RED));\r\n                speechManager.startSpeak(\"O nie! Przegrałem!\");\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n    @Override\r\n    protected void onMainServiceConnected() {\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/polinav3_SGB/TestActivity.java b/app/src/main/java/com/example/polinav3_SGB/TestActivity.java
+--- a/app/src/main/java/com/example/polinav3_SGB/TestActivity.java	(revision 0a058b958b7962c68288ab225e9f3e019041b71b)
++++ b/app/src/main/java/com/example/polinav3_SGB/TestActivity.java	(date 1780684987400)
+@@ -12,6 +12,7 @@
+ import com.sanbot.opensdk.function.unit.SpeechManager;
+ import com.sanbot.opensdk.function.unit.SystemManager;
+ import com.sanbot.opensdk.function.unit.HardWareManager;
++import com.sanbot.opensdk.base.TopBaseActivity;
+ 
+ import com.sanbot.opensdk.base.TopBaseActivity;
+ 
+Index: api/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import random\r\nimport cv2\r\nimport numpy as np\r\nfrom fastapi import FastAPI, File, UploadFile\r\nfrom fastapi.responses import JSONResponse\r\nimport uvicorn\r\nfrom ultralytics import YOLO\r\n\r\nfrom typing import List\r\nfrom collections import Counter\r\n\r\napp = FastAPI()\r\n\r\n\r\nprint(\"Ładowanie modelu YOLO...\")\r\nmodel = YOLO('best.pt')\r\nprint(\"Model załadowany pomyślnie!\")\r\n\r\ndef extract_gesture(results) -> str:\r\n    result = results[0]\r\n\r\n    if len(result.boxes) == 0:\r\n        return \"none\"\r\n\r\n    confidences = result.boxes.conf.cpu().numpy()\r\n    classes = result.boxes.cls.cpu().numpy()\r\n\r\n    best_match_index = confidences.argmax()\r\n    best_class_id = int(classes[best_match_index])\r\n    \r\n    # Pobranie nazwy gestu\r\n    gesture_name = result.names[best_class_id].lower()\r\n    \r\n\r\n    return gesture_name\r\n\r\ndef determine_winner(player_gesture: str, robot_gesture: str) -> str:\r\n    if player_gesture == robot_gesture:\r\n        return \"draw\"\r\n    \r\n    wins = {\r\n        \"rock\": \"scissors\",\r\n        \"paper\": \"rock\",\r\n        \"scissors\": \"paper\"\r\n    }\r\n    \r\n    if wins.get(player_gesture) == robot_gesture:\r\n        return \"player_wins\"\r\n    else:\r\n        return \"robot_wins\"\r\n\r\n@app.post(\"/play\")\r\nasync def play(files: List[UploadFile] = File(...)):\r\n\r\n    #sprawdzenie czy robot wysłał jakieś klatki\r\n    if not files or len(files) == 0:\r\n        return JSONResponse({\"error\": \"Nie przesłano żadnych klatek.\"}, status_code=400)\r\n\r\n    detected_gesture = []\r\n\r\n    #przechodzenie po każdej klatce\r\n    for file in files:\r\n        contents = await file.read()\r\n        nparr = np.frombuffer(contents, np.uint8)\r\n        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)\r\n\r\n        if img is not None:\r\n            #dopalanie modelu dla klatki\r\n            results = model(img, conf=0.6)\r\n            gesture = extract_gesture(results)\r\n\r\n            #zliczamy klatki na których model coś znalazł\r\n            if gesture != \"none\":\r\n                detected_gesture.append(gesture)\r\n        \r\n    valid_gestures = [\"rock\", \"paper\", \"scissors\"]\r\n\r\n    # odrzucanie błędnych klas\r\n    detected_gesture = [g for g in detected_gesture if g in valid_gestures]\r\n\r\n    # GŁOSOWANKO - wybieramy gest, który pojawił się najczęściej\r\n    vote_counts = Counter(detected_gesture)\r\n    final_gesture = vote_counts.most_common(1)[0][0]\r\n\r\n    #losownie i werdykt\r\n    robot_gesture = random.choice(valid_gestures)\r\n    result = determine_winner(final_gesture, robot_gesture)\r\n    \r\n    #Odsyłamy wynik do robota\r\n    return JSONResponse(\r\n        {\r\n        \"player_gesture\": final_gesture,\r\n        \"robot_gesture\": robot_gesture,\r\n        \"result\": result,\r\n        \"debug_votes\": dict(vote_counts)  # Dodajemy debugowe informacje o głosowaniu\r\n    })\r\n\r\nif __name__ == \"__main__\":\r\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/api/main.py b/api/main.py
+--- a/api/main.py	(revision 0a058b958b7962c68288ab225e9f3e019041b71b)
++++ b/api/main.py	(date 1780773785715)
+@@ -1,99 +1,85 @@
++import base64
+ import random
+ import cv2
+ import numpy as np
+-from fastapi import FastAPI, File, UploadFile
++from fastapi import FastAPI, HTTPException
+ from fastapi.responses import JSONResponse
+ import uvicorn
+ from ultralytics import YOLO
+-
++from pydantic import BaseModel
+ from typing import List
+ from collections import Counter
+ 
+ app = FastAPI()
+-
+-
+-print("Ładowanie modelu YOLO...")
+ model = YOLO('best.pt')
+-print("Model załadowany pomyślnie!")
++
++# 1. Definiujemy model danych wejściowych JSON
++class MatchRequest(BaseModel):
++    images: List[str]  # Lista stringów w formacie Base64
+ 
+ def extract_gesture(results) -> str:
++    if not results or len(results) == 0: return "none"
+     result = results[0]
+-
+-    if len(result.boxes) == 0:
+-        return "none"
++    if result.boxes is None or len(result.boxes) == 0: return "none"
+ 
+-    confidences = result.boxes.conf.cpu().numpy()
+-    classes = result.boxes.cls.cpu().numpy()
+-
+-    best_match_index = confidences.argmax()
+-    best_class_id = int(classes[best_match_index])
+-    
+-    # Pobranie nazwy gestu
+-    gesture_name = result.names[best_class_id].lower()
+-    
+-
+-    return gesture_name
++    best_match_index = result.boxes.conf.cpu().numpy().argmax()
++    best_class_id = int(result.boxes.cls.cpu().numpy()[best_match_index])
++    return result.names[best_class_id].lower()
+ 
+ def determine_winner(player_gesture: str, robot_gesture: str) -> str:
+-    if player_gesture == robot_gesture:
+-        return "draw"
+-    
+-    wins = {
+-        "rock": "scissors",
+-        "paper": "rock",
+-        "scissors": "paper"
+-    }
+-    
+-    if wins.get(player_gesture) == robot_gesture:
+-        return "player_wins"
+-    else:
+-        return "robot_wins"
++    if player_gesture == robot_gesture: return "draw"
++    wins = {"rock": "scissors", "paper": "rock", "scissors": "paper"}
++    return "player_wins" if wins.get(player_gesture) == robot_gesture else "robot_wins"
+ 
++# 2. Zmieniony endpoint przyjmujący czysty JSON
+ @app.post("/play")
+-async def play(files: List[UploadFile] = File(...)):
+-
+-    #sprawdzenie czy robot wysłał jakieś klatki
+-    if not files or len(files) == 0:
++async def play(data: MatchRequest):
++    if not data.images:
+         return JSONResponse({"error": "Nie przesłano żadnych klatek."}, status_code=400)
+ 
+-    detected_gesture = []
++    detected_gestures = []
++    valid_gestures = ["rock", "paper", "scissors"]
+ 
+-    #przechodzenie po każdej klatce
+-    for file in files:
+-        contents = await file.read()
+-        nparr = np.frombuffer(contents, np.uint8)
+-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
++    # 3. Dekodowanie Base64 z powrotem do obrazu OpenCV
++    for base64_string in data.images:
++        try:
++            # Odrzucamy nagłówek meta (np. "data:image/jpeg;base64,"), jeśli robot go doda
++            if "," in base64_string:
++                base64_string = base64_string.split(",")[1]
++
++            img_bytes = base64.b64decode(base64_string)
++            nparr = np.frombuffer(img_bytes, np.uint8)
++            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+ 
+-        if img is not None:
+-            #dopalanie modelu dla klatki
+-            results = model(img, conf=0.6)
+-            gesture = extract_gesture(results)
++            if img is not None:
++                results = model(img, conf=0.6, verbose=False)
++                gesture = extract_gesture(results)
++                if gesture in valid_gestures:
++                    detected_gestures.append(gesture)
++        except Exception:
++            # Ignorujemy uszkodzone klatki tekstu
++            continue
+ 
+-            #zliczamy klatki na których model coś znalazł
+-            if gesture != "none":
+-                detected_gesture.append(gesture)
+-        
+-    valid_gestures = ["rock", "paper", "scissors"]
++    if not detected_gestures:
++        return JSONResponse({
++            "error": "Nie wykryto żadnego poprawnego gestu.",
++            "player_gesture": "none",
++            "robot_gesture": "none",
++            "result": "no_detection",
++            "debug_votes": {}
++        })
+ 
+-    # odrzucanie błędnych klas
+-    detected_gesture = [g for g in detected_gesture if g in valid_gestures]
+-
+-    # GŁOSOWANKO - wybieramy gest, który pojawił się najczęściej
+-    vote_counts = Counter(detected_gesture)
++    vote_counts = Counter(detected_gestures)
+     final_gesture = vote_counts.most_common(1)[0][0]
+-
+-    #losownie i werdykt
+     robot_gesture = random.choice(valid_gestures)
+     result = determine_winner(final_gesture, robot_gesture)
+-    
+-    #Odsyłamy wynik do robota
+-    return JSONResponse(
+-        {
++
++    return JSONResponse({
+         "player_gesture": final_gesture,
+         "robot_gesture": robot_gesture,
+         "result": result,
+-        "debug_votes": dict(vote_counts)  # Dodajemy debugowe informacje o głosowaniu
++        "debug_votes": dict(vote_counts)
+     })
+ 
+ if __name__ == "__main__":
+-    uvicorn.run(app, host="0.0.0.0", port=8000)
++    uvicorn.run(app, host="0.0.0.0", port=8000)
+\ No newline at end of file
+Index: app/src/main/java/com/example/polinav3_SGB/ApiController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/polinav3_SGB/ApiController.java b/app/src/main/java/com/example/polinav3_SGB/ApiController.java
+new file mode 100644
+--- /dev/null	(date 1781035251292)
++++ b/app/src/main/java/com/example/polinav3_SGB/ApiController.java	(date 1781035251292)
+@@ -0,0 +1,120 @@
++package com.example.polinav3_SGB;
++import android.util.Base64;
++import android.util.Log;
++import java.io.BufferedReader;
++import java.io.ByteArrayOutputStream;
++import java.io.File;
++import java.io.FileInputStream;
++import java.io.IOException;
++import java.io.InputStreamReader;
++import java.io.OutputStream;
++import java.net.HttpURLConnection;
++import java.net.URL;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++
++public class ApiController {
++    private static final String TAG = "RobotAPI";
++    private static final String API_URL = "http://10.0.2.2:8000/play"; // 10.0.2.2 to IP emulatora
++
++    // Tworzenie watku
++    private final ExecutorService executor = Executors.newSingleThreadExecutor();
++
++    public void sendToServer(final List<File> PhotoFiles) {
++        executor.execute(new Runnable() {
++            @Override
++            public void run() {
++                HttpURLConnection conn = null;
++                try {
++                    List<String> basePhoto = new ArrayList<>();
++
++                    // Convert to Byte64
++                    for (File file : PhotoFiles) {
++                        if (file.exists()) {
++                            ByteArrayOutputStream ous = new ByteArrayOutputStream();
++                            try (FileInputStream ios = new FileInputStream(file)) {
++                                byte[] buffer = new byte[4096];
++                                int read;
++                                while ((read = ios.read(buffer)) != -1) {
++                                    ous.write(buffer, 0, read);
++                                }
++                                byte[] filesBytes = ous.toByteArray();
++                                String baza64 = Base64.encodeToString(filesBytes, Base64.NO_WRAP);
++                                basePhoto.add("\"" + baza64 + "\"");
++                            } catch (IOException e) {
++                                Log.e(TAG, "Error reading file: " + file.getName(), e);
++                                executor.wait(100);
++                            }
++                        }
++                    }
++
++                    if (basePhoto.isEmpty()) {
++                        Log.e(TAG, "No files to send");
++                        return;
++                    }
++
++                    // Json
++                    StringBuilder jsonBuilder = new StringBuilder();
++                    jsonBuilder.append("{\"images\": [");
++                    for (int i = 0; i < basePhoto.size(); i++) {
++                        jsonBuilder.append(basePhoto.get(i));
++                        if (i < basePhoto.size() - 1) {
++                            jsonBuilder.append(",");
++                        }
++                    }
++                    jsonBuilder.append("]}");
++                    String jsonBody = jsonBuilder.toString();
++
++                    // HTTP config
++                    URL url = new URL(API_URL);
++                    conn = (HttpURLConnection) url.openConnection();
++                    conn.setRequestMethod("POST");
++                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
++                    conn.setRequestProperty("Accept", "application/json");
++                    conn.setConnectTimeout(15000); // connect
++                    conn.setReadTimeout(15000);    // response wait
++                    conn.setDoOutput(true);        // Output data
++                    conn.setDoInput(true);         // Input data
++
++                    // Send JSON
++                    try (OutputStream os = conn.getOutputStream()) {
++                        byte[] input = jsonBody.getBytes("UTF-8");
++                        os.write(input, 0, input.length);
++                        os.flush();
++                    }
++
++                    // FastAPI response
++                    int responseCode = conn.getResponseCode();
++                    if (responseCode == HttpURLConnection.HTTP_OK) { // Kod 200
++
++                        // Read API output
++                        try (BufferedReader br = new BufferedReader(
++                                new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
++                            StringBuilder response = new StringBuilder();
++                            String responseLine;
++                            while ((responseLine = br.readLine()) != null) {
++                                response.append(responseLine.trim());
++                            }
++
++                            Log.d(TAG, "Server output data: " + response.toString());
++
++                            // Miejsce na przetwarzanie pliku JSON
++                        }
++                    } else {
++                        Log.e(TAG, "Server error: " + responseCode);
++                    }
++
++                } catch (Exception e) {
++                    Log.e(TAG, "Network error", e);
++                } finally {
++                    // Close connection
++                    if (conn != null) {
++                        conn.disconnect();
++                    }
++                }
++            }
++        });
++    }
++}

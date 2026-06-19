@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1B28A6"
@@ -9,43 +11,37 @@
 
     <Button
         android:id="@+id/buttonToTest"
-        android:layout_width="148dp"
-        android:layout_height="89dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="158dp"
-        android:layout_marginEnd="476dp"
-        android:layout_marginBottom="162dp"
-        android:text="DoSomeTests" />
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:text="DoSomeTests"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.614" />
 
     <Button
         android:id="@+id/buttonToGame"
-        android:layout_width="wrap_content"
-        android:layout_height="86dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="428dp"
-        android:layout_marginTop="162dp"
-        android:layout_marginEnd="153dp"
-        android:layout_marginBottom="163dp"
-        android:text="PlayAGame" />
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:text="PlayAGame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.822"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.614" />
 
     <Button
         android:id="@+id/buttonFlashlight"
-        android:layout_width="wrap_content"
-        android:layout_height="63dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="588dp"
-        android:layout_marginBottom="335dp"
-        android:text="Wł/ Wył latarkę" />
-</RelativeLayout>
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="Wł/ Wył latarkę"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.081"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.077" />
+</androidx.constraintlayout.widget.ConstraintLayout>

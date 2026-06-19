@@ -1,98 +1,84 @@
+import base64
 import random
 import cv2
 import numpy as np
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn
 from ultralytics import YOLO
-
+from pydantic import BaseModel
 from typing import List
 from collections import Counter
 
 app = FastAPI()
-
-
-print("Ładowanie modelu YOLO...")
 model = YOLO('best.pt')
-print("Model załadowany pomyślnie!")
+
+# 1. Definiujemy model danych wejściowych JSON
+class MatchRequest(BaseModel):
+    images: List[str]  # Lista stringów w formacie Base64
 
 def extract_gesture(results) -> str:
+    if not results or len(results) == 0: return "none"
     result = results[0]
+    if result.boxes is None or len(result.boxes) == 0: return "none"
 
-    if len(result.boxes) == 0:
-        return "none"
-
-    confidences = result.boxes.conf.cpu().numpy()
-    classes = result.boxes.cls.cpu().numpy()
-
-    best_match_index = confidences.argmax()
-    best_class_id = int(classes[best_match_index])
-    
-    # Pobranie nazwy gestu
-    gesture_name = result.names[best_class_id].lower()
-    
-
-    return gesture_name
+    best_match_index = result.boxes.conf.cpu().numpy().argmax()
+    best_class_id = int(result.boxes.cls.cpu().numpy()[best_match_index])
+    return result.names[best_class_id].lower()
 
 def determine_winner(player_gesture: str, robot_gesture: str) -> str:
-    if player_gesture == robot_gesture:
-        return "draw"
-    
-    wins = {
-        "rock": "scissors",
-        "paper": "rock",
-        "scissors": "paper"
-    }
-    
-    if wins.get(player_gesture) == robot_gesture:
-        return "player_wins"
-    else:
-        return "robot_wins"
+    if player_gesture == robot_gesture: return "draw"
+    wins = {"rock": "scissors", "paper": "rock", "scissors": "paper"}
+    return "player_wins" if wins.get(player_gesture) == robot_gesture else "robot_wins"
 
+# 2. Zmieniony endpoint przyjmujący czysty JSON
 @app.post("/play")
-async def play(files: List[UploadFile] = File(...)):
-
-    #sprawdzenie czy robot wysłał jakieś klatki
-    if not files or len(files) == 0:
+async def play(data: MatchRequest):
+    if not data.images:
         return JSONResponse({"error": "Nie przesłano żadnych klatek."}, status_code=400)
 
-    detected_gesture = []
-
-    #przechodzenie po każdej klatce
-    for file in files:
-        contents = await file.read()
-        nparr = np.frombuffer(contents, np.uint8)
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-        if img is not None:
-            #dopalanie modelu dla klatki
-            results = model(img, conf=0.6)
-            gesture = extract_gesture(results)
-
-            #zliczamy klatki na których model coś znalazł
-            if gesture != "none":
-                detected_gesture.append(gesture)
-        
+    detected_gestures = []
     valid_gestures = ["rock", "paper", "scissors"]
 
-    # odrzucanie błędnych klas
-    detected_gesture = [g for g in detected_gesture if g in valid_gestures]
+    # 3. Dekodowanie Base64 z powrotem do obrazu OpenCV
+    for base64_string in data.images:
+        try:
+            # Odrzucamy nagłówek meta (np. "data:image/jpeg;base64,"), jeśli robot go doda
+            if "," in base64_string:
+                base64_string = base64_string.split(",")[1]
 
-    # GŁOSOWANKO - wybieramy gest, który pojawił się najczęściej
-    vote_counts = Counter(detected_gesture)
+            img_bytes = base64.b64decode(base64_string)
+            nparr = np.frombuffer(img_bytes, np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            if img is not None:
+                results = model(img, conf=0.6, verbose=False)
+                gesture = extract_gesture(results)
+                if gesture in valid_gestures:
+                    detected_gestures.append(gesture)
+        except Exception:
+            # Ignorujemy uszkodzone klatki tekstu
+            continue
+
+    if not detected_gestures:
+        return JSONResponse({
+            "error": "Nie wykryto żadnego poprawnego gestu.",
+            "player_gesture": "none",
+            "robot_gesture": "none",
+            "result": "no_detection",
+            "debug_votes": {}
+        })
+
+    vote_counts = Counter(detected_gestures)
     final_gesture = vote_counts.most_common(1)[0][0]
-
-    #losownie i werdykt
     robot_gesture = random.choice(valid_gestures)
     result = determine_winner(final_gesture, robot_gesture)
-    
-    #Odsyłamy wynik do robota
-    return JSONResponse(
-        {
+
+    return JSONResponse({
         "player_gesture": final_gesture,
         "robot_gesture": robot_gesture,
         "result": result,
-        "debug_votes": dict(vote_counts)  # Dodajemy debugowe informacje o głosowaniu
+        "debug_votes": dict(vote_counts)
     })
 
 if __name__ == "__main__":
