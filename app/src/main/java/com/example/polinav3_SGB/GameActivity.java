@@ -23,10 +23,8 @@ import java.util.concurrent.Executors;
 public class GameActivity extends TopBaseActivity{
 
     List<byte[]> images = new ArrayList<>();
-//    List<Bitmap> snapshots = new ArrayList<>();
     Button playGameButton = findViewById(R.id.playGameButton);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
     private HDCameraManager hdCameraManager;
     private int streamHandle = -1;
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
