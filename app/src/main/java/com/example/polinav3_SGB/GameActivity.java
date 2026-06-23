@@ -52,6 +52,8 @@ public class GameActivity extends TopBaseActivity{
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
+                        // petla while(true)
+                        // robot mowi "Marynarzyk!" czeka chwile
                         for (int i = 0; i<4; i++){
                             try {
                                 images.add(captureSingleFrame());
@@ -67,6 +69,7 @@ public class GameActivity extends TopBaseActivity{
                                 String message = "TY: " + playerGesture + " | ROBOT: " + robotGesture + " -> " + result;
                                 Log.d("SanBot", "WYNIK SYMULACJI: " + message);
                                 getRobotReaction(result);
+                                // po rundzie robot mowi "Zagrajmy jeszcze raz" i czeka chwile na gest gracza
                             }
 
                             @Override
@@ -121,6 +124,7 @@ public class GameActivity extends TopBaseActivity{
     }
 
     public void getRobotReaction(String result){
+        // pozmieniac parametry swiatel, teraz zbyt szybko mrugaja
         if (result.equals("robot_wins")){
             systemManager.showEmotion(EmotionsType.SNICKER);
             hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_GREEN));
