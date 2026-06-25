@@ -26,6 +26,33 @@ public class TestActivity extends TopBaseActivity {
     private HardWareManager hardWareManager;
     private SpeechManager speechManager;
 
+    private void reactOnResut(String result){
+        if (result.equals("robot_wins")){
+            systemManager.showEmotion(EmotionsType.QUESTION);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_GREEN));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_GREEN));
+            speechManager.startSpeak("A HA! Wygrałem");
+        }
+        else if(result.equals("draw")){
+            systemManager.showEmotion(EmotionsType.QUESTION);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_YELLOW));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_YELLOW));
+            speechManager.startSpeak("Remis!");
+        }
+        else if(result.equals("player_wins")){
+            systemManager.showEmotion(EmotionsType.ABUSE);
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HEAD, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HEAD, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_LEFT_HAND, LED.MODE_FLICKER_RED));
+            hardWareManager.setLED(new LED(LED.PART_RIGHT_HAND, LED.MODE_FLICKER_RED));
+            speechManager.startSpeak("O nie! Przegrałem!");
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +135,7 @@ public class TestActivity extends TopBaseActivity {
 
                 // Zmieniono na TestActivity.this
                 Toast.makeText(TestActivity.this, message, Toast.LENGTH_LONG).show();
+                reactOnResut(result);
             }
 
             @Override

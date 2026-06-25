@@ -17,7 +17,7 @@ import okhttp3.Response;
 public class KlientApi {
 
     private static final String TAG = "KlientApi";
-    private static final String SERVER_URL = "http://192.168.1.5:8000/play";
+    private static String SERVER_URL = "http://192.168.0.200:8000/play";
 
     private final OkHttpClient client;
     private final Handler mainHandler;
