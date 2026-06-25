@@ -62,8 +62,6 @@ public class GameActivity extends TopBaseActivity{
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        // petla while(true)
-                        // robot mowi "Marynarzyk!" czeka chwile
                         wingMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
                         images.clear();
                         for (int i = 0; i<4; i++){
@@ -89,7 +87,8 @@ public class GameActivity extends TopBaseActivity{
                                 String message = "TY: " + playerGesture + " | ROBOT: " + robotGesture + " -> " + result;
                                 Log.d("SanBot", "WYNIK SYMULACJI: " + message);
                                 getRobotReaction(result);
-                                // po rundzie robot mowi "Zagrajmy jeszcze raz" i czeka chwile na gest gracza
+                                speechManager.startSpeak("Zagrajmy jeszcze raz!");
+                                textView.setText("Koniec gry zagrajmy jeszcze raz! ↑KLIKNIJ↑");
                             }
 
                             @Override
@@ -115,14 +114,14 @@ public class GameActivity extends TopBaseActivity{
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         wingMotionManager = (WingMotionManager) getUnitManager(FuncConstant.WINGMOTION_MANAGER);
         StreamOption streamOption = new StreamOption();
-        streamOption.setChannel(StreamOption.MAIN_STREAM); // Główny strumień HD (1280*720) [cite: 1073]
-        streamOption.setDecodType(StreamOption.HARDWARE_DECODE); // Użycie dekodowania sprzętowego [cite: 1068]
-        streamOption.setJustIframe(false); // Pozwala pobierać wszystkie klatki, a nie tylko klatki kluczowe I-frame [cite: 1070]
+        streamOption.setChannel(StreamOption.MAIN_STREAM);
+        streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
+        streamOption.setJustIframe(false);
 
-        // Żądanie otwarcia strumienia [cite: 1061, 1063]
+        // Żądanie otwarcia strumienia
         OperationResult operationResult = hdCameraManager.openStream(streamOption);
 
-        // Zapisanie uchwytu (handle) strumienia [cite: 1086, 1087, 1088]
+        // Zapisanie uchwytu (handle) strumienia
         try {
             int result = Integer.parseInt(operationResult.getResult());
             if (result > -1) {
@@ -136,12 +135,14 @@ public class GameActivity extends TopBaseActivity{
 
     public byte[] captureSingleFrame() {
         if (hdCameraManager != null) {
-            // Złapanie klatki z otwartego strumienia [cite: 1129, 1131]
+            // Złapanie klatki z otwartego strumienia
             Bitmap frame = hdCameraManager.getVideoImage();
             frame.compress(Bitmap.CompressFormat.JPEG, 70, stream);
 
             if (frame != null) {
-                return stream.toByteArray(); // Mamy poprawne zdjęcie dłoni!
+                Log.d("Video capture: ", "Zarejestrowano dłoń");
+                // Mamy poprawne zdjęcie dłoni!
+                return stream.toByteArray();
             }
         }
         return null; // Nie udało się pobrać klatki
